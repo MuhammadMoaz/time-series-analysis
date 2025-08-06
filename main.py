@@ -1,4 +1,5 @@
 import yfinance as yf
+import matplotlib
 
 # Fetching, downloading, and saving CBA.AX, WBC.AX, and NAB.AX data
 # CBA.AX
@@ -21,3 +22,4 @@ nab_data = yf.download(nab_ticker, period="max")
 print(nab_data.head())
 print(nab_data.shape)
 nab_data.to_csv("NAB_Market_Data.csv")
+
