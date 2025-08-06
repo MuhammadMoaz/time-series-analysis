@@ -1,25 +1,30 @@
 import yfinance as yf
 import matplotlib
 
-# Fetching, downloading, and saving CBA.AX, WBC.AX, and NAB.AX data
-# CBA.AX
-cba_ticker = "CBA.AX"
-cba_data = yf.download(cba_ticker, period="max")
-print(cba_data.head())
-print(cba_data.shape)
-cba_data.to_csv("CBA_Market_Data.csv")
+def fetch_data(ticker_symbol):
+    data = yf.download(ticker_symbol, period="max")
+    filename = ticker_symbol + "_data.csv"
+    data.to_csv(filename)
+    
+    print(data.head())
+    print(data.shape)
 
-# WBC.AX
-wbc_ticker = "WBC.AX"
-wbc_data = yf.download(wbc_ticker, period="max")
-print(wbc_data.head())
-print(wbc_data.shape)
-wbc_data.to_csv("WBC_Market_Data.csv")
+def preprocessing():
+    print("preprocessing")
 
-# NAB.AX
-nab_ticker = "NAB.AX"
-nab_data = yf.download(nab_ticker, period="max")
-print(nab_data.head())
-print(nab_data.shape)
-nab_data.to_csv("NAB_Market_Data.csv")
+def eda():
+    print("eda")
 
+def pda():
+    print("pda")
+
+def main():
+    fetch_data("CBA.AX")
+    fetch_data("WBC.AX")
+    fetch_data("NAB.AX")
+
+    preprocessing()
+    eda()
+    pda()
+
+main()
