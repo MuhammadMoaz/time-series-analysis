@@ -27,6 +27,7 @@ def importCheck(data, fn):
     print(data.tail())
     print(data.shape)
     print(data.describe())
+    print(data.info())
     print(f"{fn} END")
 
 
