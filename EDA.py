@@ -22,12 +22,14 @@ def edaMaker():
 
 # prints verifying statistical checks
 def importCheck(data, fn):
-    print(f"{fn} START")
-    print(data.head())
-    print(data.tail())
-    print(data.shape)
-    print(data.describe())
-    print(data.info())
+    print(f"{fn} START:")
+    print(f"Head: \n{data.head()}")
+    print(f"Tail: \n{data.tail()}")
+    print(f"Shape: \n{data.shape}")
+    print(f"Description: \n{data.describe()}")
+    print(f"Info:")
+    data.info(verbose=True)
+    print(f"Empty Cells: \n{data.isnull().sum()}")
     print(f"{fn} END")
 
 
