@@ -13,6 +13,8 @@ folders will contain graphs of different types to visualise data
 def edaMaker():
     print("edaMaker")
 
+# output import check as txt file, and graphs as pngs, 
+# store them in folders related by ticker codes
 # eda function 1
 # eda function 2
 # eda function 3
@@ -20,7 +22,8 @@ def edaMaker():
 
 # prints verifying statistical checks
 def importCheck(data, fn):
-    print(f"{fn} START:")
+    strippedName = fn.replace("datasets\\","").rstrip(".csv")
+    print(f"{strippedName} START:")
     print(f"Variables: {data.columns.tolist()}")
     print(f"Head: \n{data.head()}")
     print(f"Tail: \n{data.tail()}")
@@ -29,7 +32,7 @@ def importCheck(data, fn):
     print(f"Info:")
     data.info(verbose=True)
     print(f"Empty Cells: \n{data.isnull().sum()}")
-    print(f"{fn} END")
+    print(f"{strippedName} END")
 
 # function opens csv
 def fileOpener(fn):
