@@ -5,7 +5,7 @@ import seaborn as sns
 from pathlib import Path
 
 '''
-This File takes csv files in as input and performs a EDA on them, 
+This File takes csv files in as input and performs an EDA on them, 
 it then outputs data into folders with appropriate titling, these 
 folders will contain graphs of different types to visualise data
 '''

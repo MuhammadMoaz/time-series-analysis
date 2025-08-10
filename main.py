@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import matplotlib
+import EDA
 
 def fetch_data(ticker_symbol):
     data = yf.download(ticker_symbol, period="max")
@@ -12,10 +13,11 @@ def preprocessing(df):
     print("preprocessing")
 
 def perform_eda(df):
-    print(df.head())
-    print(df.tail())
-    print(df.shape)
-    print(df.describe())
+    # print(df.head())
+    # print(df.tail())
+    # print(df.shape)
+    # print(df.describe())
+    EDA.main()
 
 def perform_pda(df):
     print("pda")
