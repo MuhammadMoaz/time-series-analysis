@@ -27,12 +27,12 @@ def importCheckFile(data, fn):
     makedirs(dirName, exist_ok=True)
 
     with open(f"EDAOutput/EDA_{strippedName}/{strippedName}.txt", 'w+') as f:
-        f.write(f"{strippedName} EDA Output:")
-        f.write(f"Variables: {data.columns.tolist()}")
-        f.write(f"Head: \n{data.head()}")
-        f.write(f"Tail: \n{data.tail()}")
-        f.write(f"Shape: \n{data.shape}")
-        f.write(f"{data.info(verbose=True)}")
+        f.write(f"{strippedName} EDA Output:\n")
+        f.write(f"Variables: {data.columns.tolist()}\n")
+        f.write(f"Head: \n{data.head()}\n")
+        f.write(f"Tail: \n{data.tail()}\n")
+        f.write(f"Shape: \n{data.shape}\n")
+        f.write(f"{data.info(verbose=True)}\n")
         f.write(f"Empty Cells: \n{data.isnull().sum()}")
 
 # function opens csv
