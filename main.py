@@ -23,6 +23,7 @@ def perform_pda(df):
     print("pda")
 
 def main():
+    # Banking Stocks
     cba_data = fetch_data("CBA.AX")
     perform_eda(cba_data)
 
@@ -32,4 +33,17 @@ def main():
     nab_data = fetch_data("NAB.AX")
     perform_eda(nab_data)
 
+    # Materials Stocks
+    bhp_data = fetch_data("BHP.AX")
+    perform_eda(bhp_data)
+
+    nem_data = fetch_data("NEM.AX")
+    perform_eda(nem_data)
+
+    fmg_data = fetch_data("FMG.AX")
+    perform_eda(fmg_data)
+
+    # Pharma Stocks
+    
+    
 main()
