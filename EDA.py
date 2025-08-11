@@ -21,20 +21,6 @@ def edaMaker():
 # eda function 3
 # eda function 4
 
-# prints verifying statistical checks
-def importCheck(data, fn):
-    strippedName = fn.replace("datasets\\","").rstrip(".csv")
-    print(f"{strippedName} START:")
-    print(f"Variables: {data.columns.tolist()}")
-    print(f"Head: \n{data.head()}")
-    print(f"Tail: \n{data.tail()}")
-    print(f"Shape: \n{data.shape}")
-    print(f"Description: \n{data.describe()}")
-    print(f"Info:")
-    data.info(verbose=True)
-    print(f"Empty Cells: \n{data.isnull().sum()}")
-    print(f"{strippedName} END")
-
 def importCheckFile(data, fn):
     strippedName = fn.replace("datasets\\","").rstrip("AX_data.csv")
     dirName = f"EDAOutput/EDA_{strippedName}"
