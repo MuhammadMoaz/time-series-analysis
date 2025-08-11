@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from os import makedirs
 from pathlib import Path
 
 '''
@@ -34,10 +35,24 @@ def importCheck(data, fn):
     print(f"Empty Cells: \n{data.isnull().sum()}")
     print(f"{strippedName} END")
 
+def importCheckFile(data, fn):
+    strippedName = fn.replace("datasets\\","").rstrip("AX_data.csv")
+    dirName = f"EDAOutput/EDA_{strippedName}"
+    makedirs(dirName, exist_ok=True)
+
+    with open(f"EDAOutput/EDA_{strippedName}/{strippedName}.txt", 'w+') as f:
+        f.write(f"{strippedName} EDA Output:")
+        f.write(f"Variables: {data.columns.tolist()}")
+        f.write(f"Head: \n{data.head()}")
+        f.write(f"Tail: \n{data.tail()}")
+        f.write(f"Shape: \n{data.shape}")
+        f.write(f"{data.info(verbose=True)}")
+        f.write(f"Empty Cells: \n{data.isnull().sum()}")
+
 # function opens csv
 def fileOpener(fn):
     data = pd.read_csv(fn)
-    importCheck(data, fn)
+    importCheckFile(data, fn)
     
 def main():
     pathlist = Path("datasets").rglob("*.csv")
