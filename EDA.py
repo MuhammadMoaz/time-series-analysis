@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from os import makedirs
 from pathlib import Path
 
 '''
@@ -20,24 +21,24 @@ def edaMaker():
 # eda function 3
 # eda function 4
 
-# prints verifying statistical checks
-def importCheck(data, fn):
-    strippedName = fn.replace("datasets\\","").rstrip(".csv")
-    print(f"{strippedName} START:")
-    print(f"Variables: {data.columns.tolist()}")
-    print(f"Head: \n{data.head()}")
-    print(f"Tail: \n{data.tail()}")
-    print(f"Shape: \n{data.shape}")
-    print(f"Description: \n{data.describe()}")
-    print(f"Info:")
-    data.info(verbose=True)
-    print(f"Empty Cells: \n{data.isnull().sum()}")
-    print(f"{strippedName} END")
+def importCheckFile(data, fn):
+    strippedName = fn.replace("datasets\\","").rstrip("AX_data.csv")
+    dirName = f"EDAOutput/EDA_{strippedName}"
+    makedirs(dirName, exist_ok=True)
+
+    with open(f"EDAOutput/EDA_{strippedName}/{strippedName}.txt", 'w+') as f:
+        f.write(f"{strippedName} EDA Output:\n")
+        f.write(f"Variables: {data.columns.tolist()}\n")
+        f.write(f"Head: \n{data.head()}\n")
+        f.write(f"Tail: \n{data.tail()}\n")
+        f.write(f"Shape: \n{data.shape}\n")
+        f.write(f"{data.info(verbose=True)}\n")
+        f.write(f"Empty Cells: \n{data.isnull().sum()}")
 
 # function opens csv
 def fileOpener(fn):
     data = pd.read_csv(fn)
-    importCheck(data, fn)
+    importCheckFile(data, fn)
     
 def main():
     pathlist = Path("datasets").rglob("*.csv")
