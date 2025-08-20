@@ -44,5 +44,3 @@ def main():
     for p in pathlist:
         strPath = str(p)
         fileOpener(strPath)
-
-main()
