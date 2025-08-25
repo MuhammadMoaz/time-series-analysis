@@ -5,25 +5,29 @@ import EDA
 
 def fetch_data(ticker_symbol):
     data = yf.download(ticker_symbol, period="max")
+<<<<<<< HEAD
     # filename = ticker_symbol + "_data.csv"
     data.to_csv(f"datasets/temp")
+=======
+    filename = ticker_symbol + "_data.csv"
+    data.to_csv(f"datasets/{filename}")
+
+>>>>>>> 58a6ba63bc27b7d6bfe0f6c95f4657743b11c22d
     return data
 
 def preprocessing(df):
     print("preprocessing")
 
-def perform_eda(df):
-    # print(df.head())
-    # print(df.tail())
-    # print(df.shape)
-    # print(df.describe())
+def perform_eda():
     EDA.main()
 
 def perform_pda(df):
     print("pda")
 
 def main():
+    # Financials
     # Banking Stocks
+<<<<<<< HEAD
     banking_tickers = ["CBA.AX", "WBC.AX", "NAB.AX"]
     banking_data = fetch_data(banking_tickers)
 
@@ -49,4 +53,21 @@ def main():
     # Pharma Stocks
     
     
+=======
+    cba_data = fetch_data("CBA.AX")
+    wbc_data = fetch_data("WBC.AX")
+    nab_data = fetch_data("NAB.AX")
+
+    # Materials
+    bhp_data = fetch_data("BHP.AX")
+    amc_data = fetch_data("AMC.AX")
+    rio_data = fetch_data("RIO.AX")
+
+    # Healthcare
+    csl_data = fetch_data("CSL.AX")
+    rmd_data = fetch_data("RMD.AX")
+    pme_data = fetch_data("PME.AX")
+
+    perform_eda()
+>>>>>>> 58a6ba63bc27b7d6bfe0f6c95f4657743b11c22d
 main()
