@@ -4,7 +4,7 @@ import matplotlib
 import EDA
 
 def fetch_data(ticker_symbol):
-    data = yf.download(ticker_symbol, period="max")
+    data = yf.download(ticker_symbol, start="2008-01-01")
     filename = ticker_symbol + "_data.csv"
     data.to_csv(f"datasets/{filename}")
 
@@ -24,20 +24,20 @@ def perform_pda(df):
 def main():
     # Financials
     # Banking Stocks
-    cba_data = fetch_data("CBA.AX")
-    wbc_data = fetch_data("WBC.AX")
-    nab_data = fetch_data("NAB.AX")
-    banking_tickers = ["CBA.AX", "WBC.AX", "NAB.AX"]
-    banking_data = fetch_data(banking_tickers)
-
     # cba_data = fetch_data("CBA.AX")
-    # perform_eda(cba_data)
-
     # wbc_data = fetch_data("WBC.AX")
-    # perform_eda(wbc_data)
-
     # nab_data = fetch_data("NAB.AX")
-    # perform_eda(nab_data)
+    # banking_tickers = ["CBA.AX", "WBC.AX", "NAB.AX"]
+    # banking_data = fetch_data(banking_tickers)
+
+    cba_data = fetch_data("CBA.AX")
+ 
+
+    wbc_data = fetch_data("WBC.AX")
+
+
+    nab_data = fetch_data("NAB.AX")
+ 
 
     # Materials
     bhp_data = fetch_data("BHP.AX")
