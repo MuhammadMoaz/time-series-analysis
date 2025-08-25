@@ -5,14 +5,11 @@ import EDA
 
 def fetch_data(ticker_symbol):
     data = yf.download(ticker_symbol, period="max")
-<<<<<<< HEAD
-    # filename = ticker_symbol + "_data.csv"
-    data.to_csv(f"datasets/temp")
-=======
     filename = ticker_symbol + "_data.csv"
     data.to_csv(f"datasets/{filename}")
 
->>>>>>> 58a6ba63bc27b7d6bfe0f6c95f4657743b11c22d
+    # filename = ticker_symbol + "_data.csv"
+    data.to_csv(f"datasets/temp")
     return data
 
 def preprocessing(df):
@@ -27,7 +24,9 @@ def perform_pda(df):
 def main():
     # Financials
     # Banking Stocks
-<<<<<<< HEAD
+    cba_data = fetch_data("CBA.AX")
+    wbc_data = fetch_data("WBC.AX")
+    nab_data = fetch_data("NAB.AX")
     banking_tickers = ["CBA.AX", "WBC.AX", "NAB.AX"]
     banking_data = fetch_data(banking_tickers)
 
@@ -40,6 +39,17 @@ def main():
     # nab_data = fetch_data("NAB.AX")
     # perform_eda(nab_data)
 
+    # Materials
+    bhp_data = fetch_data("BHP.AX")
+    amc_data = fetch_data("AMC.AX")
+    rio_data = fetch_data("RIO.AX")
+
+    # Healthcare
+    csl_data = fetch_data("CSL.AX")
+    rmd_data = fetch_data("RMD.AX")
+    pme_data = fetch_data("PME.AX")
+
+    perform_eda()
     # Materials Stocks
     # bhp_data = fetch_data("BHP.AX")
     # perform_eda(bhp_data)
@@ -53,21 +63,4 @@ def main():
     # Pharma Stocks
     
     
-=======
-    cba_data = fetch_data("CBA.AX")
-    wbc_data = fetch_data("WBC.AX")
-    nab_data = fetch_data("NAB.AX")
-
-    # Materials
-    bhp_data = fetch_data("BHP.AX")
-    amc_data = fetch_data("AMC.AX")
-    rio_data = fetch_data("RIO.AX")
-
-    # Healthcare
-    csl_data = fetch_data("CSL.AX")
-    rmd_data = fetch_data("RMD.AX")
-    pme_data = fetch_data("PME.AX")
-
-    perform_eda()
->>>>>>> 58a6ba63bc27b7d6bfe0f6c95f4657743b11c22d
 main()
