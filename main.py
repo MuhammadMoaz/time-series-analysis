@@ -2,10 +2,10 @@ import yfinance as yf
 import pandas as pd
 import matplotlib
 import EDA
-from preprocessing import pd
+import preprocessing
 
 def preprocessing(df):
-    print("preprocessing")
+    print("preprocessing yipee")
 
 def perform_eda():
     EDA.main()
