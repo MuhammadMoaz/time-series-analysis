@@ -2,6 +2,7 @@ import yfinance as yf
 import pandas as pd
 import matplotlib
 import EDA
+from preprocessing import pd
 
 def preprocessing(df):
     print("preprocessing")
@@ -14,6 +15,5 @@ def perform_pda(df):
 
 def main():
     perform_eda()
-    
     
 main()
