@@ -16,13 +16,28 @@ def edaMaker():
 
 # output import check as txt file, and graphs as pngs, 
 # store them in folders related by ticker codes
-# eda function 1
+
+# Visualisation 1 - Histograms
+def genHistogram(data, fn):
+    strippedName = fn.replace("datasets\\","").rstrip(".AX_data.csv")
+    dirName = f"EDAOutput/EDA_{strippedName}"
+
+    plt.hist(data['Close'], color='purple')
+    plt.title('Distribution of Close Price')
+    plt.xlabel('Close Price')
+    plt.ylabel('Count')
+    plt.show()
+    plt.savefig(f"{dirName}/{strippedName}_Close_Hist")
+
+# Visualisation 2 - Boxplots
+# Visualisation 3 - Scatterplots
+
 # eda function 2
 # eda function 3
 # eda function 4
 
 def importCheckFile(data, fn):
-    strippedName = fn.replace("datasets\\","").rstrip("AX_data.csv")
+    strippedName = fn.replace("datasets\\","").rstrip(".AX_data.csv")
     dirName = f"EDAOutput/EDA_{strippedName}"
     makedirs(dirName, exist_ok=True)
 
@@ -39,9 +54,12 @@ def importCheckFile(data, fn):
 def fileOpener(fn):
     data = pd.read_csv(fn)
     importCheckFile(data, fn)
+    genHistogram(data, fn)
     
 def main():
     pathlist = Path("datasets").rglob("*.csv")
     for p in pathlist:
         strPath = str(p)
         fileOpener(strPath)
+
+main()
