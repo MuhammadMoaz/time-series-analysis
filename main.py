@@ -1,8 +1,12 @@
 import yfinance as yf
 import pandas as pd
 import matplotlib
-import EDA
 import preprocessing
+import EDA
+import arima
+import lstm
+import random_forest
+import mars
 
 def preprocessing(df):
     print("preprocessing yipee")
