@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from os import makedirs
+import os
 from pathlib import Path
 
 '''
@@ -21,15 +21,22 @@ def edaMaker():
 def genHistogram(data, fn):
     strippedName = fn.replace("datasets\\","").rstrip(".AX_data.csv")
     dirName = f"EDAOutput/EDA_{strippedName}"
+    
     columns = data.columns.tolist()
+    columns.remove("Date")
     
     for var in columns:
-        plt.hist(data[var], color='purple')
-        plt.title(f'Distribution of {var} Price')
-        plt.xlabel(f'{var} Price')
-        plt.ylabel('Count')
-        # plt.show()
-        plt.savefig(f"{dirName}/{strippedName}_{var}_Hist.png")
+        file_path = f"{dirName}/{strippedName}_{var}_Hist.png"
+        
+        if os.path.exists(file_path):
+            continue
+        else:
+            plt.hist(data[var], color='purple')
+            plt.title(f'Distribution of {var} Price')
+            plt.xlabel(f'{var} Price')
+            plt.ylabel('Count')
+            # plt.show()
+            plt.savefig(file_path)
 
 # Visualisation 2 - Boxplots
 # Visualisation 3 - Scatterplots
@@ -41,7 +48,7 @@ def genHistogram(data, fn):
 def importCheckFile(data, fn):
     strippedName = fn.replace("datasets\\","").rstrip(".AX_data.csv")
     dirName = f"EDAOutput/EDA_{strippedName}"
-    makedirs(dirName, exist_ok=True)
+    os.makedirs(dirName, exist_ok=True)
 
     with open(f"EDAOutput/EDA_{strippedName}/{strippedName}.txt", 'w+') as f:
         f.write(f"{strippedName} EDA Output:\n")
