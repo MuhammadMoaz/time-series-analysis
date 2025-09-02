@@ -21,13 +21,15 @@ def edaMaker():
 def genHistogram(data, fn):
     strippedName = fn.replace("datasets\\","").rstrip(".AX_data.csv")
     dirName = f"EDAOutput/EDA_{strippedName}"
-
-    plt.hist(data['Close'], color='purple')
-    plt.title('Distribution of Close Price')
-    plt.xlabel('Close Price')
-    plt.ylabel('Count')
-    plt.show()
-    plt.savefig(f"{dirName}/{strippedName}_Close_Hist")
+    columns = data.columns.tolist()
+    
+    for var in columns:
+        plt.hist(data[var], color='purple')
+        plt.title(f'Distribution of {var} Price')
+        plt.xlabel(f'{var} Price')
+        plt.ylabel('Count')
+        # plt.show()
+        plt.savefig(f"{dirName}/{strippedName}_{var}_Hist.png")
 
 # Visualisation 2 - Boxplots
 # Visualisation 3 - Scatterplots
