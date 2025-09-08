@@ -4,6 +4,7 @@ import pandas as pd
 def fetch_data(ticker_symbol):
     data = yf.download(ticker_symbol, end="2025-01-01", start="2001-01-01", multi_level_index=False)
     filename = ticker_symbol + "_data.csv"
+    data.index.values.astype(float)
     data.to_csv(f"datasets/{filename}")
 
 def main():

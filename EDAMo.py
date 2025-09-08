@@ -84,7 +84,7 @@ def fileOpener(fn):
     data = pd.read_csv(fn)
     importCheckFile(data, fn)
     genHistogram(data, fn)
-    genCorrMatrix(data, fn)
+    # genCorrMatrix(data, fn)
     
 def main():
     pathlist = Path("datasets").rglob("*.csv")
