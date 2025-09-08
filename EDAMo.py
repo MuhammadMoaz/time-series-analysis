@@ -14,12 +14,17 @@ folders will contain graphs of different types to visualise data
 def edaMaker():
     print("edaMaker")
 
+def nameStripper(name):
+    strName = name.replace("datasets\\","")
+    NameParts = strName.split('.')
+    return NameParts[0]
+
 # output import check as txt file, and graphs as pngs, 
 # store them in folders related by ticker codes
 
 # Visualisation 1 - Histograms
 def genHistogram(data, fn):
-    strippedName = fn.replace("datasets\\","").rstrip(".AX_data.csv")
+    strippedName = nameStripper(fn)
     dirName = f"EDAOutput/EDA_{strippedName}"
     
     columns = data.columns.tolist()
@@ -38,6 +43,20 @@ def genHistogram(data, fn):
             # plt.show()
             plt.savefig(file_path)
 
+def genCorrMatrix(data, fn):
+    strippedName = nameStripper(fn)
+    dirName = f"EDAOutput/EDA_{strippedName}"
+    file_path = f"{dirName}/{strippedName}_corr.png"
+
+    columns = data.columns.tolist()
+    # columns.remove('Date')
+    col_data = data[columns]
+    
+
+    corr_matrix = col_data.corr()
+    sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
+    plt.savefig(file_path)
+
 # Visualisation 2 - Boxplots
 # Visualisation 3 - Scatterplots
 
@@ -45,8 +64,9 @@ def genHistogram(data, fn):
 # eda function 3
 # eda function 4
 
+
 def importCheckFile(data, fn):
-    strippedName = fn.replace("datasets\\","").rstrip(".AX_data.csv")
+    strippedName = nameStripper(fn)
     dirName = f"EDAOutput/EDA_{strippedName}"
     os.makedirs(dirName, exist_ok=True)
 
@@ -64,6 +84,7 @@ def fileOpener(fn):
     data = pd.read_csv(fn)
     importCheckFile(data, fn)
     genHistogram(data, fn)
+    genCorrMatrix(data, fn)
     
 def main():
     pathlist = Path("datasets").rglob("*.csv")
