@@ -57,6 +57,23 @@ def genCorrMatrix(data, fn):
     sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
     plt.savefig(file_path)
 
+def genLineGraph(data, fn):
+    strippedName = nameStripper(fn)
+    dirName = f"EDAOutput/EDA_{strippedName}"
+
+    file_path = f"{dirName}/{strippedName}_Line.png"
+
+    x_val = data['Date']
+    y_val = data['Close']
+
+    plt.plot(x_val, y_val)
+
+    plt.xlabel("X-Axis Label")
+    plt.ylabel("Y-Axis Label")
+    plt.title("Line Graph")
+
+    plt.savefig(file_path)
+
 # Visualisation 2 - Boxplots
 # Visualisation 3 - Scatterplots
 
@@ -85,6 +102,7 @@ def fileOpener(fn):
     importCheckFile(data, fn)
     genHistogram(data, fn)
     # genCorrMatrix(data, fn)
+    genLineGraph(data, fn)
     
 def main():
     pathlist = Path("datasets").rglob("*.csv")
