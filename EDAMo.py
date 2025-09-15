@@ -22,7 +22,7 @@ def nameStripper(name):
 # output import check as txt file, and graphs as pngs, 
 # store them in folders related by ticker codes
 
-# Visualisation 1 - Histograms
+# Visualisation 1 - Histogram
 def genHistogram(data, fn):
     strippedName = nameStripper(fn)
     dirName = f"EDAOutput/EDA_{strippedName}"
@@ -43,6 +43,7 @@ def genHistogram(data, fn):
             # plt.show()
             plt.savefig(file_path)
 
+# Visualisation 2 - Correlation Matrix
 def genCorrMatrix(data, fn):
     strippedName = nameStripper(fn)
     dirName = f"EDAOutput/EDA_{strippedName}"
@@ -51,12 +52,11 @@ def genCorrMatrix(data, fn):
     columns = data.columns.tolist()
     # columns.remove('Date')
     col_data = data[columns]
-    
-
     corr_matrix = col_data.corr()
     sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
     plt.savefig(file_path)
 
+# Visualisation 3 - Line Graph
 def genLineGraph(data, fn):
     strippedName = nameStripper(fn)
     dirName = f"EDAOutput/EDA_{strippedName}"
@@ -74,13 +74,12 @@ def genLineGraph(data, fn):
 
     plt.savefig(file_path)
 
-# Visualisation 2 - Boxplots
-# Visualisation 3 - Scatterplots
+# Visualisation X - Boxplots
+# Visualisation X - Scatterplots
 
 # eda function 2
 # eda function 3
 # eda function 4
-
 
 def importCheckFile(data, fn):
     strippedName = nameStripper(fn)
