@@ -10,28 +10,37 @@ This File takes csv files in as input and performs an EDA on them,
 it then outputs data into folders with appropriate titling, these 
 folders will contain graphs of different types to visualise data
 '''
-# function calls all EDA making functions
-def edaMaker():
-    print("edaMaker")
-
-def nameStripper(name):
-    strName = name.replace("datasets\\","")
+def get_ticker(file_name):
+    strName = file_name.replace("datasets\\","")
     NameParts = strName.split('.')
     return NameParts[0]
 
-# output import check as txt file, and graphs as pngs, 
-# store them in folders related by ticker codes
+def create_output_folder(file_name, ticker):
+    dirName = f"EDAOutput/EDA_{ticker}"
+    os.makedirs(dirName, exist_ok=True)
+
+def summarise_data(data, file_path):
+    ticker = get_ticker(file_path)
+    data = pd.read_csv(file_path)
+
+    with open(f"EDAOutput/EDA_{ticker}/{ticker}.txt", 'w+') as f:
+        f.write(f"{ticker} EDA Output:\n")
+        f.write(f"Variables: {data.columns.tolist()}\n")
+        f.write(f"Head: \n{data.head()}\n")
+        f.write(f"Tail: \n{data.tail()}\n")
+        f.write(f"Shape: \n{data.shape}\n")
+        f.write(f"{data.info(verbose=True)}\n")
+        f.write(f"Empty Cells: \n{data.isnull().sum()}")
 
 # Visualisation 1 - Histogram
-def genHistogram(data, fn):
-    strippedName = nameStripper(fn)
-    dirName = f"EDAOutput/EDA_{strippedName}"
+def genHistogram(data, ticker):
+    dirName = f"EDAOutput/EDA_{ticker}"
     
     columns = data.columns.tolist()
     columns.remove("Date")
     
     for var in columns:
-        file_path = f"{dirName}/{strippedName}_{var}_Hist.png"
+        file_path = f"{dirName}/{ticker}_{var}_Hist.png"
         
         if os.path.exists(file_path):
             continue
@@ -42,26 +51,26 @@ def genHistogram(data, fn):
             plt.ylabel('Count')
             # plt.show()
             plt.savefig(file_path)
+            plt.clf()
 
 # Visualisation 2 - Correlation Matrix
-def genCorrMatrix(data, fn):
-    strippedName = nameStripper(fn)
-    dirName = f"EDAOutput/EDA_{strippedName}"
-    file_path = f"{dirName}/{strippedName}_corr.png"
+def genCorrMatrix(data, ticker):
+    dirName = f"EDAOutput/EDA_{ticker}"
+    file_path = f"{dirName}/{ticker}_corr.png"
 
     columns = data.columns.tolist()
-    # columns.remove('Date')
+    columns.remove('Date')
     col_data = data[columns]
     corr_matrix = col_data.corr()
     sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
     plt.savefig(file_path)
+    plt.clf()
 
 # Visualisation 3 - Line Graph
-def genLineGraph(data, fn):
-    strippedName = nameStripper(fn)
-    dirName = f"EDAOutput/EDA_{strippedName}"
+def genLineGraph(data, ticker):
+    dirName = f"EDAOutput/EDA_{ticker}"
 
-    file_path = f"{dirName}/{strippedName}_Line.png"
+    file_path = f"{dirName}/{ticker}_Line.png"
 
     x_val = data['Date']
     y_val = data['Close']
@@ -73,40 +82,24 @@ def genLineGraph(data, fn):
     plt.title("Line Graph")
 
     plt.savefig(file_path)
+    plt.clf()
 
 # Visualisation X - Boxplots
 # Visualisation X - Scatterplots
 
-# eda function 2
-# eda function 3
-# eda function 4
-
-def importCheckFile(data, fn):
-    strippedName = nameStripper(fn)
-    dirName = f"EDAOutput/EDA_{strippedName}"
-    os.makedirs(dirName, exist_ok=True)
-
-    with open(f"EDAOutput/EDA_{strippedName}/{strippedName}.txt", 'w+') as f:
-        f.write(f"{strippedName} EDA Output:\n")
-        f.write(f"Variables: {data.columns.tolist()}\n")
-        f.write(f"Head: \n{data.head()}\n")
-        f.write(f"Tail: \n{data.tail()}\n")
-        f.write(f"Shape: \n{data.shape}\n")
-        f.write(f"{data.info(verbose=True)}\n")
-        f.write(f"Empty Cells: \n{data.isnull().sum()}")
-
-# function opens csv
-def fileOpener(fn):
-    data = pd.read_csv(fn)
-    importCheckFile(data, fn)
-    genHistogram(data, fn)
-    # genCorrMatrix(data, fn)
-    genLineGraph(data, fn)
-    
 def main():
-    pathlist = Path("datasets").rglob("*.csv")
-    for p in pathlist:
-        strPath = str(p)
-        fileOpener(strPath)
+    datasets = Path("datasets").rglob("*.csv")
+
+    for data in datasets:
+        file_name = str(data)
+        df = pd.read_csv(data)
+
+        ticker = get_ticker(file_name)
+        create_output_folder(file_name, ticker)
+        summarise_data(df, file_name)
+
+        genHistogram(df, ticker)
+        genCorrMatrix(df, ticker)
+        genLineGraph(df, ticker)
 
 main()
