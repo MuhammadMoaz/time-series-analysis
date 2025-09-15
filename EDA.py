@@ -21,11 +21,22 @@ def edaMaker():
 # eda function 3
 # eda function 4
 
-def nameStripper(name):
-    strName = name.replace("datasets\\","")
+def nameStripper(file_name):
+    strName = file_name.replace("datasets\\","")
     NameParts = strName.split('.')
     return NameParts[0]
 
+# def closeVsTime(data, file_name):
+#     strippedName = nameStripper(fn)
+#     dirName = f"EDAOutput/EDA_{strippedName}"
+#     file_path = f"{dirName}/{strippedName}_corr.png"
+
+#     columns = data.columns.tolist()
+#     # columns.remove('Date')
+#     col_data = data[columns]
+#     corr_matrix = col_data.corr()
+#     sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
+#     plt.savefig(file_path)
 
 def genCorrMatrix(data, sname):
     dirName = f"EDAOutput/EDA_{sname}"
@@ -38,13 +49,12 @@ def genCorrMatrix(data, sname):
     sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
     plt.savefig(file_path)
 
-
-def importCheckFile(data, sname):
-    dirName = f"EDAOutput/EDA_{sname}"
+def importCheckFile(data, file_name):
+    dirName = f"EDAOutput/EDA_{file_name}"
     makedirs(dirName, exist_ok=True)
 
-    with open(f"EDAOutput/EDA_{sname}/{sname}.txt", 'w+') as f:
-        f.write(f"{sname} EDA Output:\n")
+    with open(f"EDAOutput/EDA_{file_name}/{file_name}.txt", 'w+') as f:
+        f.write(f"{file_name} EDA Output:\n")
         f.write(f"Variables: {data.columns.tolist()}\n")
         f.write(f"Head: \n{data.head()}\n")
         f.write(f"Tail: \n{data.tail()}\n")
@@ -53,13 +63,16 @@ def importCheckFile(data, sname):
         f.write(f"Empty Cells: \n{data.isnull().sum()}")
 
 # function opens csv
-def fileOpener(fn):
-    data = pd.read_csv(fn)
-    sname = nameStripper(fn)
+def fileOpener(file_name):
+    data = pd.read_csv(file_name)
+    sname = nameStripper(file_name)
     importCheckFile(data, sname)
+    genCorrMatrix(data, sname)
     
 def main():
     pathlist = Path("datasets").rglob("*.csv")
     for p in pathlist:
         strPath = str(p)
         fileOpener(strPath)
+
+main()
