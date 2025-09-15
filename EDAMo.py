@@ -10,6 +10,7 @@ This File takes csv files in as input and performs an EDA on them,
 it then outputs data into folders with appropriate titling, these 
 folders will contain graphs of different types to visualise data
 '''
+
 def get_ticker(file_name):
     strName = file_name.replace("datasets\\","")
     NameParts = strName.split('.')
@@ -49,7 +50,6 @@ def genHistogram(data, ticker):
             plt.title(f'Distribution of {var} Price')
             plt.xlabel(f'{var} Price')
             plt.ylabel('Count')
-            # plt.show()
             plt.savefig(file_path)
             plt.clf()
 
@@ -85,6 +85,7 @@ def genLineGraph(data, ticker):
     plt.clf()
 
 # Visualisation X - Boxplots
+
 # Visualisation X - Scatterplots
 
 def main():
