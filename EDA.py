@@ -21,13 +21,30 @@ def edaMaker():
 # eda function 3
 # eda function 4
 
-def importCheckFile(data, fn):
-    strippedName = fn.replace("datasets\\","").rstrip("AX_data.csv")
-    dirName = f"EDAOutput/EDA_{strippedName}"
+def nameStripper(name):
+    strName = name.replace("datasets\\","")
+    NameParts = strName.split('.')
+    return NameParts[0]
+
+
+def genCorrMatrix(data, sname):
+    dirName = f"EDAOutput/EDA_{sname}"
+    file_path = f"{dirName}/{sname}_corr.png"
+
+    columns = data.columns.tolist()
+    # columns.remove('Date')
+    col_data = data[columns]
+    corr_matrix = col_data.corr()
+    sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
+    plt.savefig(file_path)
+
+
+def importCheckFile(data, sname):
+    dirName = f"EDAOutput/EDA_{sname}"
     makedirs(dirName, exist_ok=True)
 
-    with open(f"EDAOutput/EDA_{strippedName}/{strippedName}.txt", 'w+') as f:
-        f.write(f"{strippedName} EDA Output:\n")
+    with open(f"EDAOutput/EDA_{sname}/{sname}.txt", 'w+') as f:
+        f.write(f"{sname} EDA Output:\n")
         f.write(f"Variables: {data.columns.tolist()}\n")
         f.write(f"Head: \n{data.head()}\n")
         f.write(f"Tail: \n{data.tail()}\n")
@@ -38,7 +55,8 @@ def importCheckFile(data, fn):
 # function opens csv
 def fileOpener(fn):
     data = pd.read_csv(fn)
-    importCheckFile(data, fn)
+    sname = nameStripper(fn)
+    importCheckFile(data, sname)
     
 def main():
     pathlist = Path("datasets").rglob("*.csv")
