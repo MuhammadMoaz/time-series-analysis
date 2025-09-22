@@ -16,11 +16,6 @@ def get_ticker(file_name):
     NameParts = strName.split('.')
     return NameParts[0]
 
-def create_lagged_features(df, target_col, lags):
-    for i in range(1, lags + 1):
-        df[f'lag_{i}'] = df[target_col].shift(i)
-    return df.dropna()
-
 def main():
     datasets = Path("datasets").rglob("*.csv")
 
