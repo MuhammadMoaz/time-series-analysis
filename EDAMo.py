@@ -60,9 +60,11 @@ def genCorrMatrix(data, ticker):
 
     columns = data.columns.tolist()
     columns.remove('Date')
-    col_data = data[columns]
+
+    col_data = data[columns].diff().dropna()
     corr_matrix = col_data.corr()
     sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
+    plt.title(f"{ticker} Correlation Matrix (Difference in Close)")
     plt.savefig(file_path)
     plt.clf()
 
@@ -79,7 +81,7 @@ def genLineGraph(data, ticker):
 
     plt.xlabel("X-Axis Label")
     plt.ylabel("Y-Axis Label")
-    plt.title("Line Graph")
+    plt.title(f"{ticker} Line Graph")
 
     plt.savefig(file_path)
     plt.clf()
