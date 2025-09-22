@@ -25,5 +25,3 @@ Low       0
 Open      0
 Volume    0
 dtype: int64
-
-Average Close Price: 16.28
