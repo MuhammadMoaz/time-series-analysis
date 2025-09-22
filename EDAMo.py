@@ -31,7 +31,7 @@ def summarise_data(data, file_path):
         f.write(f"Tail: \n{data.tail()}\n")
         f.write(f"Shape: \n{data.shape}\n")
         f.write(f"{data.info(verbose=True)}\n")
-        f.write(f"Empty Cells: \n{data.isnull().sum()}")
+        f.write(f"Empty Cells: \n{data.isnull().sum()}\n")
 
 # Visualisation 1 - Histogram
 def genHistogram(data, ticker):
@@ -86,14 +86,16 @@ def genLineGraph(data, ticker):
     plt.savefig(file_path)
     plt.clf()
 
-
-
-
-
-# Visulisation 4 - What's the Moving Average?
+# Visulisation 4 - Moving Average Graph (What's the Moving Average?)
+def genMovingAvgGraph(data, ticker):
+    print()
 
 # EDA - What's the average Closing price?
+def getAvgClose(data, ticker):
+    avg_close = round(data['Close'].mean(), 2)
 
+    with open(f"EDAOutput/EDA_{ticker}/{ticker}.txt", 'a') as f:
+        f.write(f"Average Close Price: {avg_close}")
 
 def main():
     datasets = Path("datasets").rglob("*.csv")
@@ -105,10 +107,12 @@ def main():
         ticker = get_ticker(file_name)
         create_output_folder(file_name, ticker)
         summarise_data(df, file_name)
+        
+        getAvgClose(df, ticker)
 
-        genHistogram(df, ticker)
-        genCorrMatrix(df, ticker)
-        genLineGraph(df, ticker)
+        # genHistogram(df, ticker)
+        # genCorrMatrix(df, ticker)
+        # genLineGraph(df, ticker)
         
 
 main()
