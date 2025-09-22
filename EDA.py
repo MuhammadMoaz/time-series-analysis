@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import seaborn as sns
 import os
 from pathlib import Path
@@ -96,17 +97,15 @@ def genLineSub():
         df = pd.read_csv(data)
         df["Date"] = pd.to_datetime(df["Date"])
 
-        x_dates = pd.date_range(start='2001-01-01', end='2024-12-31', freq='YS')
+        ax = plt.subplot(3,3,i)
+       
+        ax.plot(df["Date"], df["Close"])
+        ax.xaxis.set_major_locator(mdates.YearLocator())
+        ax.set_ylabel("Close Price")
+        # ax.set_xlabel("Date")
+        plt.xticks(rotation = 70)
+        ax.set_title(f"{ticker} Close Price")
 
-        plt.subplot(3,3,i)
-        plt.plot(df["Date"], df["Close"])
-        # df["Close"].plot()
-        plt.xticks(x_dates, rotation = 90)
-        plt.ylabel("Close Price")
-        plt.xlabel("Date")
-        plt.title(f"{ticker} Closing Price")
-        
-    
     plt.tight_layout()
     plt.show()
 
