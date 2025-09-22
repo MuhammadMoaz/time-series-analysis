@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from statsmodels.graphics.tsaplots import plot_acf
 import seaborn as sns
 import os
 from pathlib import Path
@@ -85,7 +86,6 @@ def genLineGraph(data, ticker):
     plt.savefig(file_path)
     plt.clf()
 
-
 # Visualisation X - gen line subplots
 def genLineSub():
     datasets = Path("datasets").rglob("*.csv")
@@ -112,6 +112,43 @@ def genLineSub():
     plt.savefig(file_path)
     plt.clf()
 
+def autoCorrACF(data, ticker):
+    dirName = f"EDAOutput/EDA_{ticker}"
+    file_path = f"{dirName}/{ticker}_AutoCorr.png"
+
+    plt.figure(figsize=(20,15))
+    plot_acf(data["Close"], lags=730)#two years is 730 days
+    plt.ylim(0,1)
+    plt.xlabel("Lags")
+    plt.ylabel("Corr")
+    plt.title(f"{ticker} Auto Correlation")
+
+    plt.tight_layout()
+    plt.savefig(file_path)
+    plt.clf()
+
+
+def autoCorrMPL():
+    datasets = Path("datasets").rglob("*.csv")
+    file_path = "EDAOutput/Grouped_AutoCorr.png"
+
+    plt.figure(figsize=(20,10))
+
+    for i, data in enumerate(datasets, 1):
+        file_name = str(data)
+        ticker = get_ticker(file_name)
+        df = pd.read_csv(data)
+        df["Date"] = pd.to_datetime(df["Date"])
+
+        ax = plt.subplot(3,3,i)
+        ax.acorr(df["Close"], usevlines=True, normed=True, maxlags=730, lw=2)
+        ax.set_title(f"{ticker} AutoCorr")
+
+    plt.tight_layout()
+    plt.savefig(file_path)
+    plt.clf()
+    
+
 
 def main():
     datasets = Path("datasets").rglob("*.csv")
@@ -127,6 +164,8 @@ def main():
         # genHistogram(df, ticker)
         # genCorrMatrix(df, ticker)
         # genLineGraph(df, ticker)
+        autoCorrACF(df, ticker)
 
-    genLineSub()
+    # genLineSub()
+    # autoCorrMPL()
 main()
