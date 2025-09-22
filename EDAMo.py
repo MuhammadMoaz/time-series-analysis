@@ -86,9 +86,14 @@ def genLineGraph(data, ticker):
     plt.savefig(file_path)
     plt.clf()
 
-# Visualisation X - Boxplots
 
-# Visualisation X - Scatterplots
+
+
+
+# Visulisation 4 - What's the Moving Average?
+
+# EDA - What's the average Closing price?
+
 
 def main():
     datasets = Path("datasets").rglob("*.csv")
@@ -104,5 +109,6 @@ def main():
         genHistogram(df, ticker)
         genCorrMatrix(df, ticker)
         genLineGraph(df, ticker)
+        
 
 main()
