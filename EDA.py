@@ -89,6 +89,8 @@ def genLineGraph(data, ticker):
 # Visualisation X - gen line subplots
 def genLineSub():
     datasets = Path("datasets").rglob("*.csv")
+    file_path = "EDAOutput/Grouped_LineGraphs.png"
+
     plt.figure(figsize=(20,10))
 
     for i, data in enumerate(datasets, 1):
@@ -107,7 +109,8 @@ def genLineSub():
         ax.set_title(f"{ticker} Close Price")
 
     plt.tight_layout()
-    plt.show()
+    plt.savefig(file_path)
+    plt.clf()
 
 
 def main():
