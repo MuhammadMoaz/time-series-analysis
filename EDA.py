@@ -94,13 +94,14 @@ def genLineSub():
         file_name = str(data)
         ticker = get_ticker(file_name)
         df = pd.read_csv(data)
+        df["Date"] = pd.to_datetime(df["Date"])
 
         x_dates = pd.date_range(start='2001-01-01', end='2024-12-31', freq='YS')
-        ud_dates = pd.to_datetime(df["Date"])
+
         plt.subplot(3,3,i)
-        plt.plot_date(ud_dates, df["Close"])
+        plt.plot(df["Date"], df["Close"])
         # df["Close"].plot()
-        plt.xticks(x_dates, rotation = 20, )
+        plt.xticks(x_dates, rotation = 90)
         plt.ylabel("Close Price")
         plt.xlabel("Date")
         plt.title(f"{ticker} Closing Price")
