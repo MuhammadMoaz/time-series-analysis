@@ -88,7 +88,15 @@ def genLineGraph(data, ticker):
 
 # Visulisation 4 - Moving Average Graph (What's the Moving Average?)
 def genMovingAvgGraph(data, ticker):
-    print()
+    data['Moving_Average'] = data['Close'].rolling(window=100).mean()    
+    
+    x_val = data['Date']
+    y_val = data['Moving_Average']
+    
+    plt.plot(x_val, data['Close'], label='Original Data', alpha=0.7)
+    plt.plot(x_val, y_val, color='red')
+    plt.show()
+    plt.clf()
 
 # EDA - What's the average Closing price?
 def getAvgClose(data, ticker):
@@ -113,6 +121,7 @@ def main():
         # genHistogram(df, ticker)
         # genCorrMatrix(df, ticker)
         # genLineGraph(df, ticker)
+        genMovingAvgGraph(df, ticker)
         
 
 main()

@@ -100,7 +100,7 @@ def genLineSub():
         plt.subplot(3,3,i)
         plt.plot_date(ud_dates, df["Close"])
         # df["Close"].plot()
-        plt.xticks(x_dates, rotation = 20)
+        plt.xticks(x_dates, rotation = 20, )
         plt.ylabel("Close Price")
         plt.xlabel("Date")
         plt.title(f"{ticker} Closing Price")
@@ -119,7 +119,7 @@ def main():
 
         ticker = get_ticker(file_name)
         create_output_folder(file_name, ticker)
-        summarise_data(df, file_name)
+        # summarise_data(df, file_name)
 
         # genHistogram(df, ticker)
         # genCorrMatrix(df, ticker)
