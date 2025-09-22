@@ -148,7 +148,21 @@ def autoCorrMPL():
     plt.savefig(file_path)
     plt.clf()
     
+# moving average, subplots (mean function for dataframes)
+def movAveragePlot(data, ticker):
+    dirName = f"EDAOutput/EDA_{ticker}"
+    file_path = f"{dirName}/{ticker}_MA_Line.png"
 
+    data['Moving_Average'] = data['Close'].rolling(window=100).mean()    
+    
+    x_val = data['Date']
+    y_val = data['Moving_Average']
+    
+    plt.plot(x_val, data['Close'], label='Original Data', alpha=0.7)
+    plt.plot(x_val, y_val, color='red')
+
+    plt.savefig(file_path)
+    plt.clf()
 
 def main():
     datasets = Path("datasets").rglob("*.csv")
@@ -164,7 +178,7 @@ def main():
         # genHistogram(df, ticker)
         # genCorrMatrix(df, ticker)
         # genLineGraph(df, ticker)
-        autoCorrACF(df, ticker)
+        # autoCorrACF(df, ticker)
 
     # genLineSub()
     # autoCorrMPL()
