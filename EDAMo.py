@@ -71,7 +71,6 @@ def genCorrMatrix(data, ticker):
 # Visualisation 3 - Line Graph
 def genLineGraph(data, ticker):
     dirName = f"EDAOutput/EDA_{ticker}"
-
     file_path = f"{dirName}/{ticker}_Line.png"
 
     x_val = data['Date']
@@ -88,6 +87,9 @@ def genLineGraph(data, ticker):
 
 # Visulisation 4 - Moving Average Graph (What's the Moving Average?)
 def genMovingAvgGraph(data, ticker):
+    dirName = f"EDAOutput/EDA_{ticker}"
+    file_path = f"{dirName}/{ticker}_MA_Line.png"
+
     data['Moving_Average'] = data['Close'].rolling(window=100).mean()    
     
     x_val = data['Date']
@@ -95,7 +97,8 @@ def genMovingAvgGraph(data, ticker):
     
     plt.plot(x_val, data['Close'], label='Original Data', alpha=0.7)
     plt.plot(x_val, y_val, color='red')
-    plt.show()
+
+    plt.savefig(file_path)
     plt.clf()
 
 # EDA - What's the average Closing price?
