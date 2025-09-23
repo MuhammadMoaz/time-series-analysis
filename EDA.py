@@ -99,24 +99,27 @@ def genLineSub(var_name, file_name):
 
 
 # Visualisation 1 - Histogram
-def genHistogram(data, ticker):
-    dirName = f"EDAOutput/EDA_{ticker}"
-    
-    columns = data.columns.tolist()
-    columns.remove("Date")
-    
-    for var in columns:
-        file_path = f"{dirName}/{ticker}_{var}_Hist.png"
-        
-        if os.path.exists(file_path):
-            continue
-        else:
-            plt.hist(data[var], color='purple')
-            plt.title(f'Distribution of {var} Price')
-            plt.xlabel(f'{var} Price')
-            plt.ylabel('Count')
-            plt.savefig(file_path)
-            plt.clf()
+def genHistogram(var_name, file_name):
+    datasets = Path("datasets").rglob("*.csv")
+    file_path = f"EDAOutput/{file_name}.png"
+
+    plt.figure(figsize=(20,10))
+
+    for i, data in enumerate(datasets, 1):
+        file_name = str(data)
+        ticker = get_ticker(file_name)
+        df = pd.read_csv(data)
+        df["Date"] = pd.to_datetime(df["Date"])
+        df.drop(index=0)
+
+        ax = plt.subplot(3,3,i)
+       
+        ax.hist(df[var_name], color="blue")
+        ax.set_title(f"{ticker} Histogram of {var_name} Close Price")
+
+    plt.tight_layout()
+    plt.savefig(file_path)
+    plt.clf()
 
 # Visualisation 2 - Correlation Matrix
 def genCorrMatrix(data, ticker):
@@ -183,26 +186,6 @@ def autoCorrPACF(data, ticker):
     plt.tight_layout()
     plt.savefig(file_path)
     plt.clf()
-
-def autoCorrMPL():
-    datasets = Path("datasets").rglob("*.csv")
-    file_path = "EDAOutput/Grouped_AutoCorr.png"
-
-    plt.figure(figsize=(20,10))
-
-    for i, data in enumerate(datasets, 1):
-        file_name = str(data)
-        ticker = get_ticker(file_name)
-        df = pd.read_csv(data)
-        df["Date"] = pd.to_datetime(df["Date"])
-
-        ax = plt.subplot(3,3,i)
-        ax.acorr(df["Close"], usevlines=True, normed=True, maxlags=250, lw=2)
-        ax.set_title(f"{ticker} AutoCorr")
-
-    plt.tight_layout()
-    plt.savefig(file_path)
-    plt.clf()
     
 # moving average, subplots (mean function for dataframes)
 def movAveragePlot():
@@ -242,6 +225,8 @@ def main():
     # plot line graphs for Close and LR --
     genLineSub("Close", "Group_ClosePLineGraphs")
     genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
+    genHistogram("Close", "Group_HistClosePrice")
+    genHistogram("Log_Returns", "Group_HistLRClosePrice")
 
     for data in datasets:
         file_name = str(data)
@@ -261,7 +246,7 @@ def main():
         autoCorrACF(df, ticker, "Log_Returns")
         autoCorrPACF(df, ticker)
 
+        # basic visualisation of data
+            # corr matrix thingy
   
-    # autoCorrMPL()
-    # movAveragePlot()
 main()
