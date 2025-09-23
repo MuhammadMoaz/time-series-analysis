@@ -55,7 +55,7 @@ def main():
             rfr_pred = rfr.predict(last_known.to_frame().T)[0]
             rfr_preds.append(rfr_pred)
 
-            # roll lag values
+            # Shift lag values
             last_known['Close_lag3'] = last_known['Close_lag2']
             last_known['Close_lag2'] = last_known['Close_lag1']
             last_known['Close_lag1'] = rfr_pred
@@ -75,7 +75,7 @@ def main():
         print(f"{ticker} RMSE: {rmse}")
 
         # FUTURE DATA FORECASTING (OPTIONAL) JUST MESSING AROUND
-        future_steps = 90
+        future_steps = 365
         future_preds = []
         last_known = X.iloc[-1].copy()
         last_date = df.index[-1]
