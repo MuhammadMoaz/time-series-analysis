@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.graphics.tsaplots import plot_pacf
+from statsmodels.tsa.stattools import adfuller
 import seaborn as sns
 import os
 from pathlib import Path
@@ -22,9 +24,17 @@ def create_output_folder(file_name, ticker):
     dirName = f"EDAOutput/EDA_{ticker}"
     os.makedirs(dirName, exist_ok=True)
 
-def summarise_data(data, file_path):
+def summarise_data(data, file_path): #fix!!!
     ticker = get_ticker(file_path)
     data = pd.read_csv(file_path)
+
+    result = adfuller(data["Close"].diff().dropna())
+    station = ""
+
+    if (result[1] <= 0.05) & (result[4]['5%'] > result[0]):
+        station = "Stationary"
+    else:
+        station = "Non-stationary"
 
     with open(f"EDAOutput/EDA_{ticker}/{ticker}.txt", 'w+') as f:
         f.write(f"{ticker} EDA Output:\n")
@@ -33,7 +43,10 @@ def summarise_data(data, file_path):
         f.write(f"Tail: \n{data.tail()}\n")
         f.write(f"Shape: \n{data.shape}\n")
         f.write(f"{data.info(verbose=True)}\n")
-        f.write(f"Empty Cells: \n{data.isnull().sum()}")
+        f.write(f"Empty Cells: \n{data.isnull().sum()}\n")
+        f.write(f"ADF Statistic: {result[0]}. P-value: {result[1]}\n")
+        f.write(f"The close price data is {station}")
+
 
 # Visualisation 1 - Histogram
 def genHistogram(data, ticker):
@@ -67,7 +80,6 @@ def genCorrMatrix(data, ticker):
     sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
     plt.savefig(file_path)
     plt.clf()
-
 # Visualisation 3 - Line Graph
 def genLineGraph(data, ticker):
     dirName = f"EDAOutput/EDA_{ticker}"
@@ -85,7 +97,6 @@ def genLineGraph(data, ticker):
 
     plt.savefig(file_path)
     plt.clf()
-
 # Visualisation X - gen line subplots
 def genLineSub():
     datasets = Path("datasets").rglob("*.csv")
@@ -117,8 +128,8 @@ def autoCorrACF(data, ticker):
     file_path = f"{dirName}/{ticker}_AutoCorr.png"
 
     plt.figure(figsize=(20,15))
-    plot_acf(data["Close"], lags=730)#two years is 730 days
-    plt.ylim(0,1)
+    plot_acf(data["Close"].diff().dropna(), lags=25)#two years is 730 days
+    # plt.ylim(0,1)
     plt.xlabel("Lags")
     plt.ylabel("Corr")
     plt.title(f"{ticker} Auto Correlation")
@@ -127,6 +138,20 @@ def autoCorrACF(data, ticker):
     plt.savefig(file_path)
     plt.clf()
 
+def autoCorrPACF(data, ticker):
+    dirName = f"EDAOutput/EDA_{ticker}"
+    file_path = f"{dirName}/{ticker}_PartialAutoCorr.png"
+
+    plt.figure(figsize=(20,15))
+    plot_pacf(data["Close"], lags=50)#two years is 730 days
+    # plt.ylim(0,1)
+    plt.xlabel("Lags")
+    plt.ylabel("Corr")
+    plt.title(f"{ticker} PACF")
+
+    plt.tight_layout()
+    plt.savefig(file_path)
+    plt.clf()
 
 def autoCorrMPL():
     datasets = Path("datasets").rglob("*.csv")
@@ -141,7 +166,7 @@ def autoCorrMPL():
         df["Date"] = pd.to_datetime(df["Date"])
 
         ax = plt.subplot(3,3,i)
-        ax.acorr(df["Close"], usevlines=True, normed=True, maxlags=730, lw=2)
+        ax.acorr(df["Close"], usevlines=True, normed=True, maxlags=250, lw=2)
         ax.set_title(f"{ticker} AutoCorr")
 
     plt.tight_layout()
@@ -179,6 +204,7 @@ def main():
         # genCorrMatrix(df, ticker)
         # genLineGraph(df, ticker)
         # autoCorrACF(df, ticker)
+        # autoCorrPACF(df, ticker)
 
     # genLineSub()
     # autoCorrMPL()

@@ -25,4 +25,5 @@ Low       0
 Open      0
 Volume    0
 dtype: int64
-Average Close Price: 13.53
+ADF Statistic: -22.39826389181136. P-value: 0.0
+The close price data is Stationary
