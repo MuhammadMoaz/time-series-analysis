@@ -48,7 +48,7 @@ def main():
         # Make predictions
         predictions = rf_regressor.predict(X_test)
 
-        plt.figure(figsize=(12, 6))
+        plt.figure(figsize=(14, 6))
         plt.plot(df['Date'][:-test_size], y_train, label='Actual', color='blue')
         # plt.plot(df['Date'][-test_size:], y_test, label='Actual Test', color='green') # Actual Test Data to compare with prediction
         plt.plot(df['Date'][-test_size:], predictions, label='Predicted', color='red', linestyle='--')
