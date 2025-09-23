@@ -6,6 +6,7 @@ def fetch_data(ticker_symbol):
     data = yf.download(ticker_symbol, end="2025-01-01", start="2001-01-01", multi_level_index=False)
     filename = ticker_symbol + "_data.csv"
     data['Log_Returns'] = np.log(data['Close'] / data['Close'].shift(1))
+    data['Differenced'] = data["Close"].diff()
     data.to_csv(f"datasets/{filename}")
 
 def main():
