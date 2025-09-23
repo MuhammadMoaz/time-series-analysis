@@ -174,20 +174,36 @@ def autoCorrMPL():
     plt.clf()
     
 # moving average, subplots (mean function for dataframes)
-def movAveragePlot(data, ticker):
-    dirName = f"EDAOutput/EDA_{ticker}"
-    file_path = f"{dirName}/{ticker}_MA_Line.png"
+def movAveragePlot():
+    datasets = Path("datasets").rglob("*.csv")
+    file_path = "EDAOutput/MA_lineGraph.png"
+    plt.figure(figsize=(20,10))
 
-    data['Moving_Average'] = data['Close'].rolling(window=100).mean()    
-    
-    x_val = data['Date']
-    y_val = data['Moving_Average']
-    
-    plt.plot(x_val, data['Close'], label='Original Data', alpha=0.7)
-    plt.plot(x_val, y_val, color='red')
+    for i, data in enumerate(datasets, 1):
+        file_name = str(data)
+        ticker = get_ticker(file_name)
+        df = pd.read_csv(data)
+        df["Date"] = pd.to_datetime(df["Date"])
+        df['Moving_Average'] = df['Close'].rolling(window=100).mean() 
+        df["Diff_Close"] = df["Close"].diff()
+        df.drop(df.index[0])  
+        
+        ax = plt.subplot(3,3,i)
 
+        ax.plot(df["Date"], df["Diff_Close"], color = "blue", lw=1, label="Close")
+        # ax.plot(df["Date"], df["Moving_Average"], color = "red", linestyle="--", lw=2, label = "MA")
+        
+        ax.xaxis.set_major_locator(mdates.YearLocator())
+        ax.set_ylabel("MA Close Price")
+        # ax.set_xlabel("Date")
+        plt.xticks(rotation = 70)
+        ax.legend()
+        ax.set_title(f"{ticker} MA Close Price")
+
+    plt.tight_layout()
     plt.savefig(file_path)
     plt.clf()
+
 
 def main():
     datasets = Path("datasets").rglob("*.csv")
@@ -208,4 +224,5 @@ def main():
 
     # genLineSub()
     # autoCorrMPL()
+    movAveragePlot()
 main()
