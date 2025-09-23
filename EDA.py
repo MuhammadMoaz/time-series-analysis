@@ -185,12 +185,12 @@ def movAveragePlot():
         df = pd.read_csv(data)
         df["Date"] = pd.to_datetime(df["Date"])
         df['Moving_Average'] = df['Close'].rolling(window=100).mean() 
-        df["Diff_Close"] = df["Close"].diff()
+        df['Log_Returns'] = np.log(df['Close'] / df['Close'].shift(1))
         df.drop(df.index[0])  
         
         ax = plt.subplot(3,3,i)
 
-        ax.plot(df["Date"], df["Diff_Close"], color = "blue", lw=1, label="Close")
+        ax.plot(df["Date"], df["Log_Returns"], color = "blue", lw=1, label="Close")
         # ax.plot(df["Date"], df["Moving_Average"], color = "red", linestyle="--", lw=2, label = "MA")
         
         ax.xaxis.set_major_locator(mdates.YearLocator())
