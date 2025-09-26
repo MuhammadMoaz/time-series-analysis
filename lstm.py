@@ -93,5 +93,5 @@ def main():
         plt.legend()
         plt.grid()
         plt.show()
-        
+
 main()
