@@ -225,6 +225,7 @@ def main():
     # plot line graphs for Close and LR --
     genLineSub("Close", "Group_ClosePLineGraphs")
     genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
+    # genLineSub("Differenced1", "Grouped_DiffClosePrice")
     genHistogram("Close", "Group_HistClosePrice")
     genHistogram("Log_Returns", "Group_HistLRClosePrice")
 
@@ -235,18 +236,18 @@ def main():
         ticker = get_ticker(file_name)
         # create_output_folder(file_name, ticker)
 
-        # get basic statistics of data --
-        summarise_data(df, file_name)
-        getAvgClose(df, ticker)
+        # # get basic statistics of data --
+        # summarise_data(df, file_name)
+        # getAvgClose(df, ticker)
 
-        # Get Auto Correlation Graphs of Close Price
-        autoCorrACF(df, ticker, "Close")
+        # # Get Auto Correlation Graphs of Close Price
+        # autoCorrACF(df, ticker, "Close")
 
-        # Get Auto Correlation Graphs of Log Returns Close Price
-        autoCorrACF(df, ticker, "Log_Returns")
-        autoCorrPACF(df, ticker)
+        # # Get Auto Correlation Graphs of Log Returns Close Price
+        # autoCorrACF(df, ticker, "Log_Returns")
+        # autoCorrPACF(df, ticker)
 
-        # basic visualisation of data
-            # corr matrix thingy
+        # # basic visualisation of data
+        #     # corr matrix thingy
   
 main()
