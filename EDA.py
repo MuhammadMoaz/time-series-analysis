@@ -23,10 +23,17 @@ def create_output_folder(ticker):
     dirName = f"EDAOutput/EDA_{ticker}"
     os.makedirs(dirName, exist_ok=True)
 
+def set_df_size(df, days):
+    if days == 0:
+        return df
+    else:
+        return df.iloc[len(df)-days:].copy(deep = True)
+
 # basic Statistics 
-def summarise_data(file_path, train_split = False):
+def summarise_data(file_path, train_split = False, datasize = 0):
     ticker = get_ticker(file_path)
     data = pd.read_csv(file_path)
+    data = set_df_size(data, datasize)
     ticker_ext = ticker
 
     train_size = int(len(data)*0.8)
@@ -75,7 +82,7 @@ def summarise_data(file_path, train_split = False):
         f.write(f"The Differened Close Price data is {stationDiff} with a critical value of 5%\n\n")
 
 # visualisation 
-def genLineSub(var_name, file_name):
+def genLineSub(var_name, file_name, t_scale = 'y', datasize = 0):
     datasets = Path("datasets").rglob("*.csv")
     file_path = f"EDAOutput/{file_name}.png"
 
@@ -85,13 +92,18 @@ def genLineSub(var_name, file_name):
         file_name = str(data)
         ticker = get_ticker(file_name)
         df = pd.read_csv(data)
-        df["Date"] = pd.to_datetime(df["Date"])
-        df.dropna()
+        sized_df = set_df_size(df, datasize)
+        sized_df["Date"] = pd.to_datetime(sized_df["Date"])
+        sized_df.dropna()
 
         ax = plt.subplot(3,3,i)
        
-        ax.plot(df["Date"], df[var_name])
-        ax.xaxis.set_major_locator(mdates.YearLocator())
+        ax.plot(sized_df["Date"], sized_df[var_name])
+        if t_scale == 'm':
+            ax.xaxis.set_major_locator(mdates.MonthLocator())
+        else:
+            ax.xaxis.set_major_locator(mdates.YearLocator())
+            
         ax.set_ylabel(var_name)
         # ax.set_xlabel("Date")
         plt.xticks(rotation = 70)
@@ -214,26 +226,27 @@ def main():
     datasets = Path("datasets").rglob("*.csv")
 
     # plot line graphs for Close LR and Diff
-    genLineSub("Close", "Group_ClosePLineGraphs")
-    genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
-    genLineSub("Differenced", "Group_DiffLineGraphs")
+    genLineSub("Close", "Group_ClosePLineGraphs", 'm', 150)
+    genLineSub("Log_Returns", "Group_LogReturnsLineGraphs", 'm', 150)
+    genLineSub("Differenced", "Group_DiffLineGraphs", 'm', 150)
 
     # to make individual plots for each ticker
     for data in datasets:
         file_name = str(data)
         df = pd.read_csv(data)
+        sized_df = set_df_size(df, 150)
 
         # create eda folders for each ticker
         ticker = get_ticker(file_name)
-        create_output_folder(file_name, ticker)
+        create_output_folder(ticker)
 
-        # # get basic statistics of data --
-        summarise_data(file_name, True)
+        # get basic statistics of data 
+        summarise_data(file_name, True, 150)
 
         # # Get Auto Correlation Graphs of Close Price
-        genACFGraphs(df,ticker,"Close", True)
-        genACFGraphs(df,ticker,"Differenced", True)
-        genACFGraphs(df,ticker,"Log_Returns", True)
+        genACFGraphs(sized_df,ticker,"Close", True)
+        genACFGraphs(sized_df,ticker,"Differenced", True)
+        genACFGraphs(sized_df,ticker,"Log_Returns", True)
 
         # basic visualisation of data
         #     # corr matrix thingy
