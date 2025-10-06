@@ -21,7 +21,6 @@ def CustomARIMA(df, ticker, p, d, q):
     df.drop(index=0)
     X_train, X_test, y_train, y_test = train_test_split(df["Date"], df["Close"], train_size=len(df)-30, random_state=42)
 
-
     model = ARIMA(y_train, order=(p,d,q))
     res = model.fit()
     print(res.summary())

@@ -10,16 +10,16 @@ Head:
 
 [5 rows x 8 columns]
 Tail: 
-            Date       Close  ...  Log_Returns  Differenced
-6097  2024-12-23  254.946411  ...     0.026941     6.776886
-6098  2024-12-24  249.706573  ...    -0.020767    -5.239838
-6099  2024-12-27  257.222015  ...     0.029653     7.515442
-6100  2024-12-30  257.251953  ...     0.000116     0.029938
-6101  2024-12-31  249.636688  ...    -0.030049    -7.615265
+            Date      Close  ...  Log_Returns  Differenced
+4876  2020-02-28  19.716827  ...    -0.029809    -0.596592
+4877  2020-03-02  20.215614  ...     0.024983     0.498787
+4878  2020-03-03  20.264515  ...     0.002416     0.048901
+4879  2020-03-04  19.374519  ...    -0.044913    -0.889996
+4880  2020-03-05  18.952696  ...    -0.022013    -0.421824
 
 [5 rows x 8 columns]
 Shape: 
-(6102, 8)
+(4881, 8)
 None
 Empty Cells: 
 Date           0
@@ -32,12 +32,12 @@ Log_Returns    1
 Differenced    1
 dtype: int64
 
-ADF Statistic: 9.617036522835624. P-value: 1.0
+ADF Statistic: -0.3790253244811359. P-value: 0.9135423349711542
 The Close Price data is Non-stationary with a critical value of 5%
 
-ADF Statistic: -79.92683299505148. P-value: 0.0
+ADF Statistic: -71.26635474657914. P-value: 0.0
 The Log Return Close Price data is Stationary with a critical value of 5%
 
-ADF Statistic: -10.178438680888023. P-value: 6.794421940156204e-18
+ADF Statistic: -9.339562481633775. P-value: 8.872253587099698e-16
 The Differened Close Price data is Stationary with a critical value of 5%
 

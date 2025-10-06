@@ -2,8 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from statsmodels.graphics.tsaplots import plot_acf
-from statsmodels.graphics.tsaplots import plot_pacf
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.stattools import adfuller
 import seaborn as sns
 import os
@@ -20,55 +19,60 @@ def get_ticker(file_name):
     NameParts = strName.split('.')
     return NameParts[0]
 
-def create_output_folder(file_name, ticker):
+def create_output_folder(ticker):
     dirName = f"EDAOutput/EDA_{ticker}"
     os.makedirs(dirName, exist_ok=True)
 
 # basic Statistics 
-def summarise_data(data, file_path):
+def summarise_data(file_path, train_split = False):
     ticker = get_ticker(file_path)
     data = pd.read_csv(file_path)
+    ticker_ext = ticker
+
+    train_size = int(len(data)*0.8)
+    if train_split:
+        data = data.iloc[:train_size]
+        ticker_ext = f"{ticker}TrainSplit"
 
     # to see results for price ADF test, do data["Close"]
     resultClose = adfuller(data["Close"])
     resultLR = adfuller(data["Log_Returns"].dropna()) # drops first row with NaN val
+    resultDiff = adfuller(data["Differenced"].dropna()) # drops first row with NaN val
 
-    stationClose = ""
-    stationLR = ""
+    stationClose = "Non-stationary"
+    stationLR = "Non-stationary"
+    stationDiff = "Non-stationary"
 
     if (resultClose[1] <= 0.05) & (resultClose[4]['5%'] > resultClose[0]):
         stationClose = "Stationary"
-    else:
-        stationClose = "Non-stationary"
 
     if (resultLR[1] <= 0.05) & (resultLR[4]['5%'] > resultLR[0]):
         stationLR = "Stationary"
-    else:
-        stationLR = "Non-stationary"
 
-    
+    if (resultDiff[1] <= 0.05) & (resultDiff[4]['5%'] > resultDiff[0]):
+        stationDiff = "Stationary"
 
-    with open(f"EDAOutput/EDA_{ticker}/{ticker}.txt", 'w+') as f:
+    avg_close = round(data['Close'].mean(), 2)
+
+    with open(f"EDAOutput/EDA_{ticker}/{ticker_ext}.txt", 'w+') as f:
         f.write(f"{ticker} EDA Output:\n")
         f.write(f"Variables: {data.columns.tolist()}\n")
         f.write(f"Head: \n{data.head()}\n")
         f.write(f"Tail: \n{data.tail()}\n")
         f.write(f"Shape: \n{data.shape}\n")
         f.write(f"{data.info(verbose=True)}\n")
-        f.write(f"Empty Cells: \n{data.isnull().sum()}\n\n")
+        f.write(f"Empty Cells: \n{data.isnull().sum()}\n")
+        f.write(f"Average Close Price: {avg_close}\n\n")
 
         # Augmented Dickey Fuller for both Close price and Close LR
         f.write(f"ADF Statistic: {resultClose[0]}. P-value: {resultClose[1]}\n")
-        f.write(f"The Close Price data is {stationClose}\n\n")
+        f.write(f"The Close Price data is {stationClose} with a critical value of 5%\n\n")
 
         f.write(f"ADF Statistic: {resultLR[0]}. P-value: {resultLR[1]}\n")
-        f.write(f"The Log Return Close Price data is {stationLR}\n\n")
+        f.write(f"The Log Return Close Price data is {stationLR} with a critical value of 5%\n\n")
 
-def getAvgClose(data, ticker):
-    avg_close = round(data['Close'].mean(), 2)
-
-    with open(f"EDAOutput/EDA_{ticker}/{ticker}.txt", 'a') as f:
-        f.write(f"Average Close Price: {avg_close}")
+        f.write(f"ADF Statistic: {resultDiff[0]}. P-value: {resultDiff[1]}\n")
+        f.write(f"The Differened Close Price data is {stationDiff} with a critical value of 5%\n\n")
 
 # visualisation 
 def genLineSub(var_name, file_name):
@@ -82,7 +86,7 @@ def genLineSub(var_name, file_name):
         ticker = get_ticker(file_name)
         df = pd.read_csv(data)
         df["Date"] = pd.to_datetime(df["Date"])
-        df.drop(index=0)
+        df.dropna()
 
         ax = plt.subplot(3,3,i)
        
@@ -96,7 +100,6 @@ def genLineSub(var_name, file_name):
     plt.tight_layout()
     plt.savefig(file_path)
     plt.clf()
-
 
 # Visualisation 1 - Histogram
 def genHistogram(var_name, file_name):
@@ -134,6 +137,7 @@ def genCorrMatrix(data, ticker):
     plt.savefig(file_path)
     plt.clf()
 # Visualisation 3 - Line Graph
+
 def genLineGraph(data, ticker):
     dirName = f"EDAOutput/EDA_{ticker}"
 
@@ -152,41 +156,28 @@ def genLineGraph(data, ticker):
     plt.clf()
 # Visualisation X - gen line subplots
 
-
-def autoCorrACF(data, ticker, var_name):
+def genACFGraphs(data, ticker, var_name, train_split = False):
     dirName = f"EDAOutput/EDA_{ticker}"
-    file_path = f"{dirName}/{ticker}_{var_name}_AutoCorr.png"
+    data.dropna()
 
-    inc_zero = True
-    if var_name == "Log_Returns":
-        inc_zero = False
+    if train_split:
+        file_path = f"{dirName}/training_{ticker}_{var_name}_ACF.png"
+        train_size = int(len(data)*0.8)
+        data = data.iloc[:train_size]
+    else:
+        file_path = f"{dirName}/original_{ticker}_{var_name}_ACF.png"
 
-    # plt.figure(figsize=(20,15))
-    plot_acf(data[var_name], lags=50, auto_ylims=True, missing="drop", 
-             zero=inc_zero, color="red", alpha=0.05)
-    plt.xlabel("Lags")
-    plt.ylabel("Auto Correlation")
-    plt.title(f"{ticker} {var_name} Auto Correlation")
+    fig, (ax1, ax2) = plt.subplots(2,1, figsize = (15, 15))
 
-    plt.tight_layout()
-    plt.savefig(file_path)
-    plt.clf()
-
-def autoCorrPACF(data, ticker):
-    dirName = f"EDAOutput/EDA_{ticker}"
-    file_path = f"{dirName}/{ticker}_ReturnsPartialAutoCorr.png"
-
-    plt.figure(figsize=(20,15))
-    plot_pacf(data["Log_Returns"].dropna(), lags=50, alpha=0.05, zero=False)
-    plt.ylim(-0.5,0.5)
-    plt.xlabel("Lags")
-    plt.ylabel("Partial Auto Correlation")
-    plt.title(f"{ticker} PACF")
-
-    plt.tight_layout()
-    plt.savefig(file_path)
-    plt.clf()
+    plot_acf(data[var_name], lags=25, auto_ylims=True, missing="drop", 
+             zero=False, color="red", alpha=0.05, ax=ax1, title="ACF")
     
+    plot_pacf(data[var_name].dropna(), lags=25, alpha=0.05, zero=False, ax=ax2,
+              auto_ylims=True, title="PACF")
+    
+    plt.savefig(file_path)
+    plt.clf()
+
 # moving average, subplots (mean function for dataframes)
 def movAveragePlot():
     datasets = Path("datasets").rglob("*.csv")
@@ -222,32 +213,29 @@ def movAveragePlot():
 def main():
     datasets = Path("datasets").rglob("*.csv")
 
-    # plot line graphs for Close and LR --
+    # plot line graphs for Close LR and Diff
     genLineSub("Close", "Group_ClosePLineGraphs")
     genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
-    # genLineSub("Differenced1", "Grouped_DiffClosePrice")
-    genHistogram("Close", "Group_HistClosePrice")
-    genHistogram("Log_Returns", "Group_HistLRClosePrice")
+    genLineSub("Differenced", "Group_DiffLineGraphs")
 
+    # to make individual plots for each ticker
     for data in datasets:
         file_name = str(data)
         df = pd.read_csv(data)
 
+        # create eda folders for each ticker
         ticker = get_ticker(file_name)
-        # create_output_folder(file_name, ticker)
+        create_output_folder(file_name, ticker)
 
         # # get basic statistics of data --
-        # summarise_data(df, file_name)
-        # getAvgClose(df, ticker)
+        summarise_data(file_name, True)
 
         # # Get Auto Correlation Graphs of Close Price
-        # autoCorrACF(df, ticker, "Close")
+        genACFGraphs(df,ticker,"Close", True)
+        genACFGraphs(df,ticker,"Differenced", True)
+        genACFGraphs(df,ticker,"Log_Returns", True)
 
-        # # Get Auto Correlation Graphs of Log Returns Close Price
-        # autoCorrACF(df, ticker, "Log_Returns")
-        # autoCorrPACF(df, ticker)
-
-        # # basic visualisation of data
+        # basic visualisation of data
         #     # corr matrix thingy
   
 main()
