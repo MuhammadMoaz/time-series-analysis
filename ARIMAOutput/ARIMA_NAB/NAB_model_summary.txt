@@ -1,22 +1,21 @@
                                SARIMAX Results                                
 ==============================================================================
 Dep. Variable:                  Close   No. Observations:                  120
-Model:                 ARIMA(1, 1, 0)   Log Likelihood                 -69.769
-Date:                Tue, 07 Oct 2025   AIC                            143.538
-Time:                        02:18:51   BIC                            149.096
-Sample:                             0   HQIC                           145.795
+Model:                 ARIMA(0, 1, 0)   Log Likelihood                 -70.344
+Date:                Tue, 07 Oct 2025   AIC                            142.687
+Time:                        02:28:17   BIC                            145.466
+Sample:                             0   HQIC                           143.816
                                 - 120                                         
 Covariance Type:                  opg                                         
 ==============================================================================
                  coef    std err          z      P>|z|      [0.025      0.975]
 ------------------------------------------------------------------------------
-ar.L1          0.0988      0.076      1.302      0.193      -0.050       0.247
-sigma2         0.1891      0.024      7.809      0.000       0.142       0.237
+sigma2         0.1910      0.019     10.102      0.000       0.154       0.228
 ===================================================================================
-Ljung-Box (L1) (Q):                   0.03   Jarque-Bera (JB):                27.57
-Prob(Q):                              0.87   Prob(JB):                         0.00
-Heteroskedasticity (H):               1.75   Skew:                            -0.98
-Prob(H) (two-sided):                  0.08   Kurtosis:                         4.31
+Ljung-Box (L1) (Q):                   0.94   Jarque-Bera (JB):                45.94
+Prob(Q):                              0.33   Prob(JB):                         0.00
+Heteroskedasticity (H):               1.71   Skew:                            -1.15
+Prob(H) (two-sided):                  0.09   Kurtosis:                         4.99
 ===================================================================================
 
 Warnings:
