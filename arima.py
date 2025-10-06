@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import seaborn as sns
@@ -10,7 +10,10 @@ from pathlib import Path
 import os
 
 def set_df_size(df, days):
-    return df.iloc[len(df)-days:].copy(deep = True)
+    if days == 0:
+        return df
+    else:
+        return df.iloc[len(df)-days:].copy(deep = True)
 
 def create_output_folder(ticker):
     dirName = f"ARIMAOutput/ARIMA_{ticker}"
@@ -103,6 +106,7 @@ def ARIMAForcast(df, ticker, p,d,q):
     result = model.fit()
 
     forecast_ARIMA = result.get_forecast(len(test_set))
+    print(type(forecast_ARIMA))
     pred_mean = forecast_ARIMA.predicted_mean
     forecast_CI = forecast_ARIMA.conf_int()
 
@@ -110,6 +114,7 @@ def ARIMAForcast(df, ticker, p,d,q):
     df["Date"] = pd.to_datetime(df["Date"])
     test_set["Date"] = pd.to_datetime(test_set["Date"])
 
+    # plotting forecast
     fig, (ax1) = plt.subplots(1,1, figsize=(20,10))
     ax1.plot(df["Date"], df["Close"], label="Actual")
     ax1.plot(df["Date"], df["forecasted"], label="Predicted")
@@ -125,6 +130,20 @@ def ARIMAForcast(df, ticker, p,d,q):
     plt.tight_layout()
     plt.savefig(file_path)
     plt.clf()
+
+    # getting forecast metrics, adding them to txt file
+    # print(list(pred_mean))
+    rmse = np.sqrt(mean_squared_error(test_set["Close"], list(pred_mean))) 
+    mape = mean_absolute_percentage_error(test_set["Close"], list(pred_mean))
+    mae = mean_absolute_error(test_set["Close"], list(pred_mean))
+    r2 = r2_score(test_set["Close"], list(pred_mean))
+
+    with open(f"{dirName}/{ticker}_model_metrics.txt", 'w+') as f:
+        f.write(f"The following are the metrics for {ticker}'s ARIMA model:\n")
+        f.write(f"RMSE: {rmse}\n")
+        f.write(f"MAPE: {mape}\n")
+        f.write(f"MAE: {mae}\n")
+        f.write(f"R^2: {r2}\n")
 
 def main():
     datasets = Path("datasets").rglob("*.csv")
