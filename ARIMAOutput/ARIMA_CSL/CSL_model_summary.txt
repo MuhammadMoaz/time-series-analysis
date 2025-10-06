@@ -1,22 +1,22 @@
                                SARIMAX Results                                
 ==============================================================================
-Dep. Variable:                  Close   No. Observations:                 4881
-Model:                 ARIMA(1, 1, 0)   Log Likelihood               -7479.073
-Date:                Tue, 07 Oct 2025   AIC                          14962.145
-Time:                        01:47:26   BIC                          14975.131
-Sample:                             0   HQIC                         14966.702
-                               - 4881                                         
+Dep. Variable:                  Close   No. Observations:                  120
+Model:                 ARIMA(1, 1, 0)   Log Likelihood                -294.998
+Date:                Tue, 07 Oct 2025   AIC                            593.996
+Time:                        02:18:50   BIC                            599.555
+Sample:                             0   HQIC                           596.253
+                                - 120                                         
 Covariance Type:                  opg                                         
 ==============================================================================
                  coef    std err          z      P>|z|      [0.025      0.975]
 ------------------------------------------------------------------------------
-ar.L1         -0.0648      0.005    -12.343      0.000      -0.075      -0.055
-sigma2         1.2552      0.007    182.657      0.000       1.242       1.269
+ar.L1         -0.1109      0.085     -1.303      0.193      -0.278       0.056
+sigma2         8.3309      0.654     12.731      0.000       7.048       9.613
 ===================================================================================
-Ljung-Box (L1) (Q):                   0.02   Jarque-Bera (JB):            132643.09
-Prob(Q):                              0.89   Prob(JB):                         0.00
-Heteroskedasticity (H):             103.04   Skew:                             0.50
-Prob(H) (two-sided):                  0.00   Kurtosis:                        28.52
+Ljung-Box (L1) (Q):                   0.00   Jarque-Bera (JB):                89.28
+Prob(Q):                              0.95   Prob(JB):                         0.00
+Heteroskedasticity (H):               1.28   Skew:                            -1.20
+Prob(H) (two-sided):                  0.44   Kurtosis:                         6.50
 ===================================================================================
 
 Warnings:
