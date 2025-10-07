@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import root_mean_squared_error, r2_score, mean_absolute_percentage_error, mean_absolute_error
 
 def create_output_folder(file_name, ticker):
     dir_name = f"PDAOutput/PDA_{ticker}"
@@ -50,32 +51,32 @@ def main():
 
         # Standard Averaging
 
-        window_size = 100
-        train_size = int(len(all_close_data) * 0.8)
-        N = all_close_data.size
+        # window_size = 100
+        # train_size = int(len(all_close_data) * 0.8)
+        # N = all_close_data.size
 
-        std_avg_predictions = []
-        mse_errors = []
+        # std_avg_predictions = []
+        # mse_errors = []
 
-        # Start predicting only from the test set
-        for pred_idx in range(train_size, N):
-            std_avg_predictions.append(np.mean(all_close_data[pred_idx-window_size:pred_idx]))
-            mse_errors.append((std_avg_predictions[-1] - all_close_data[pred_idx])**2)
+        # # Start predicting only from the test set
+        # for pred_idx in range(train_size, N):
+        #     std_avg_predictions.append(np.mean(all_close_data[pred_idx-window_size:pred_idx]))
+        #     mse_errors.append((std_avg_predictions[-1] - all_close_data[pred_idx])**2)
 
-        mse = np.mean(mse_errors)
-        rmse = np.sqrt(mse)
+        # mse = np.mean(mse_errors)
+        # rmse = np.sqrt(mse)
 
-        print(f'{ticker} MSE error for standard averaging (test only): %.5f' % (0.5*np.mean(mse_errors)))
-        print(f'{ticker} RMSE error for standard averaging (test only): {rmse:.5f}')
+        # # print(f'{ticker} MSE error for standard averaging (test only): %.5f' % (0.5*np.mean(mse_errors)))
+        # # print(f'{ticker} RMSE error for standard averaging (test only): {rmse:.5f}')
 
-        plt.figure(figsize=(18,9))
-        plt.title(f"{ticker} Standard Averaging Forecast")
-        plt.plot(range(df.shape[0]), all_close_data, color='b', label='True')
-        plt.plot(range(train_size, N), std_avg_predictions, color='orange', label='Prediction')
-        plt.xlabel('Date')
-        plt.ylabel('Mid Price')
-        plt.legend(fontsize=18)
-        plt.show()
+        # # plt.figure(figsize=(18,9))
+        # # plt.title(f"{ticker} Standard Averaging Forecast")
+        # # plt.plot(range(df.shape[0]), all_close_data, color='b', label='True')
+        # # plt.plot(range(train_size, N), std_avg_predictions, color='orange', label='Prediction')
+        # # plt.xlabel('Date')
+        # # plt.ylabel('Mid Price')
+        # # plt.legend(fontsize=18)
+        # # plt.show()
 
         # EMA Averaging
         N = all_close_data.size
@@ -96,8 +97,19 @@ def main():
         mse = np.mean(mse_errors)
         rmse = np.sqrt(mse)
 
+        # Convert predictions and true values back into numpy arrays for metrics
+        y_true = all_close_data[train_size:]
+        y_pred = np.array(run_avg_predictions)
+
+        mae = mean_absolute_error(y_true, y_pred)
+        mape = mean_absolute_percentage_error(y_true, y_pred)
+        r2 = r2_score(y_true, y_pred)
+
         print(f'{ticker} MSE error for EMA averaging (test only): %.5f' % (0.5*np.mean(mse_errors)))
         print(f'{ticker} RMSE error for EMA averaging (test only): {rmse:.5f}')
+        print(f'{ticker} MAE error for EMA averaging: {mae}')
+        print(f'{ticker} MAPE error for EMA averaging: {mape}')
+        print(f'{ticker} R^2 score for EMA averaging: {r2}')
 
         plt.figure(figsize=(18,9))
         plt.title(f"{ticker} EMA Averaging Forecast")
@@ -106,13 +118,7 @@ def main():
         plt.xlabel('Date')
         plt.ylabel('Mid Price')
         plt.legend(fontsize=18)
-        plt.show()
-
-        plt.figure(figsize = (18,9))
-        plt.plot(range(df.shape[0]),(df['Low']+df['High'])/2.0)
-        plt.xticks(range(0,df.shape[0],500),df['Date'].loc[::500],rotation=45)
-        plt.xlabel('Date',fontsize=18)
-        plt.ylabel('Mid Price',fontsize=18)
-        plt.show()
+        plt.savefig(f"PDAOutput/PDA_{ticker}/{ticker}_LSTM.png")
+        plt.clf()
 
 main()
