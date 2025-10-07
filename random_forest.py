@@ -110,7 +110,7 @@ def main():
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
         plt.xticks(rotation=45)
 
-        plt.savefig(f"PDAOutput/PDA_{ticker}/{ticker}_Random_Forest.png")
+        # plt.savefig(f"PDAOutput/PDA_{ticker}/{ticker}_Random_Forest.png")
         plt.clf()
 
 main()
