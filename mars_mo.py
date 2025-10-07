@@ -61,10 +61,7 @@ def main():
         r2 = r2_score(y_test, y_pred)
         rmse = root_mean_squared_error(y_test, y_pred)
 
-        print(f"{ticker} MAE Score: {mae}")
-        print(f"{ticker} MAPE Score: {mape}")
-        print(f"{ticker} R-Sqaured Score: {r2}")
-        print(f"{ticker} RMSE Score: {rmse}")
+        print(f"{ticker} | MAE: {mae:.3f}, RMSE: {rmse:.3f}, MAPE: {mape*100:.2f}%, R2: {r2:.3f}")
 
         plt.figure(figsize=(12, 6))
         plt.plot(dates, y, label="True")
