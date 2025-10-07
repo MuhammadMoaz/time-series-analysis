@@ -48,60 +48,61 @@ def main():
 
         all_close_data = np.concatenate([train_data, test_data], axis=0)
 
+        # Standard Averaging
+
         window_size = 100
-        N = train_data.size
+        train_size = int(len(all_close_data) * 0.8)
+        N = all_close_data.size
+
         std_avg_predictions = []
-        std_avg_x = []
         mse_errors = []
 
-        for pred_idx in range(window_size,N):
+        # Start predicting only from the test set
+        for pred_idx in range(train_size, N):
+            std_avg_predictions.append(np.mean(all_close_data[pred_idx-window_size:pred_idx]))
+            mse_errors.append((std_avg_predictions[-1] - all_close_data[pred_idx])**2)
 
-            if pred_idx >= N:
-                date = dt.datetime.strptime(k, '%Y-%m-%d').date() + dt.timedelta(days=1)
-            else:
-                date = df.loc[pred_idx,'Date']
+        mse = np.mean(mse_errors)
+        rmse = np.sqrt(mse)
 
-            std_avg_predictions.append(np.mean(train_data[pred_idx-window_size:pred_idx]))
-            mse_errors.append((std_avg_predictions[-1]-train_data[pred_idx])**2)
-            std_avg_x.append(date)
+        print(f'{ticker} MSE error for standard averaging (test only): %.5f' % (0.5*np.mean(mse_errors)))
+        print(f'{ticker} RMSE error for standard averaging (test only): {rmse:.5f}')
 
-        print('MSE error for standard averaging: %.5f'%(0.5*np.mean(mse_errors)))
-        
-        plt.figure(figsize = (18,9))
-        plt.plot(range(df.shape[0]),all_close_data,color='b',label='True')
-        plt.plot(range(window_size,N),std_avg_predictions,color='orange',label='Prediction')
-        #plt.xticks(range(0,df.shape[0],50),df['Date'].loc[::50],rotation=45)
+        plt.figure(figsize=(18,9))
+        plt.title(f"{ticker} Standard Averaging Forecast")
+        plt.plot(range(df.shape[0]), all_close_data, color='b', label='True')
+        plt.plot(range(train_size, N), std_avg_predictions, color='orange', label='Prediction')
         plt.xlabel('Date')
         plt.ylabel('Mid Price')
         plt.legend(fontsize=18)
         plt.show()
 
-        window_size = 100
-        N = train_data.size
+        # EMA Averaging
+        N = all_close_data.size
+        train_size = int(len(all_close_data) * 0.8)
 
         run_avg_predictions = []
-        run_avg_x = []
-
         mse_errors = []
 
         running_mean = 0.0
-        run_avg_predictions.append(running_mean)
-
         decay = 0.5
 
-        for pred_idx in range(1,N):
-
-            running_mean = running_mean*decay + (1.0-decay)*train_data[pred_idx-1]
+        # Predict only on test set
+        for pred_idx in range(train_size, N):
+            running_mean = running_mean*decay + (1.0-decay)*all_close_data[pred_idx-1]
             run_avg_predictions.append(running_mean)
-            mse_errors.append((run_avg_predictions[-1]-train_data[pred_idx])**2)
-            run_avg_x.append(date)
+            mse_errors.append((run_avg_predictions[-1] - all_close_data[pred_idx])**2)
 
-        print('MSE error for EMA averaging: %.5f'%(0.5*np.mean(mse_errors)))
-        
-        plt.figure(figsize = (18,9))
-        plt.plot(range(df.shape[0]),all_close_data,color='b',label='True')
-        plt.plot(range(0,N),run_avg_predictions,color='orange', label='Prediction')
-        #plt.xticks(range(0,df.shape[0],50),df['Date'].loc[::50],rotation=45)
+        mse = np.mean(mse_errors)
+        rmse = np.sqrt(mse)
+
+        print(f'{ticker} MSE error for EMA averaging (test only): %.5f' % (0.5*np.mean(mse_errors)))
+        print(f'{ticker} RMSE error for EMA averaging (test only): {rmse:.5f}')
+
+        plt.figure(figsize=(18,9))
+        plt.title(f"{ticker} EMA Averaging Forecast")
+        plt.plot(range(df.shape[0]), all_close_data, color='b', label='True')
+        plt.plot(range(train_size, N), run_avg_predictions, color='orange', label='Prediction')
         plt.xlabel('Date')
         plt.ylabel('Mid Price')
         plt.legend(fontsize=18)
