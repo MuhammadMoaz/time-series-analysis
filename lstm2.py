@@ -49,35 +49,6 @@ def main():
 
         all_close_data = np.concatenate([train_data, test_data], axis=0)
 
-        # Standard Averaging
-
-        # window_size = 100
-        # train_size = int(len(all_close_data) * 0.8)
-        # N = all_close_data.size
-
-        # std_avg_predictions = []
-        # mse_errors = []
-
-        # # Start predicting only from the test set
-        # for pred_idx in range(train_size, N):
-        #     std_avg_predictions.append(np.mean(all_close_data[pred_idx-window_size:pred_idx]))
-        #     mse_errors.append((std_avg_predictions[-1] - all_close_data[pred_idx])**2)
-
-        # mse = np.mean(mse_errors)
-        # rmse = np.sqrt(mse)
-
-        # # print(f'{ticker} MSE error for standard averaging (test only): %.5f' % (0.5*np.mean(mse_errors)))
-        # # print(f'{ticker} RMSE error for standard averaging (test only): {rmse:.5f}')
-
-        # # plt.figure(figsize=(18,9))
-        # # plt.title(f"{ticker} Standard Averaging Forecast")
-        # # plt.plot(range(df.shape[0]), all_close_data, color='b', label='True')
-        # # plt.plot(range(train_size, N), std_avg_predictions, color='orange', label='Prediction')
-        # # plt.xlabel('Date')
-        # # plt.ylabel('Mid Price')
-        # # plt.legend(fontsize=18)
-        # # plt.show()
-
         # EMA Averaging
         N = all_close_data.size
         train_size = int(len(all_close_data) * 0.8)

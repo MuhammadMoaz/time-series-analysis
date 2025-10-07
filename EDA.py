@@ -226,22 +226,27 @@ def main():
     datasets = Path("datasets").rglob("*.csv")
 
     # plot line graphs for Close LR and Diff
-    genLineSub("Close", "Group_ClosePLineGraphs", 'm', 150)
-    genLineSub("Log_Returns", "Group_LogReturnsLineGraphs", 'm', 150)
-    genLineSub("Differenced", "Group_DiffLineGraphs", 'm', 150)
+    # genLineSub("Close", "Group_ClosePLineGraphs", 'm', 150)
+    # genLineSub("Log_Returns", "Group_LogReturnsLineGraphs", 'm', 150)
+    # genLineSub("Differenced", "Group_DiffLineGraphs", 'm', 150)
+
+    genLineSub("Close", "Group_ClosePLineGraphs")
+    genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
+    genLineSub("Differenced", "Group_DiffLineGraphs")
 
     # to make individual plots for each ticker
     for data in datasets:
         file_name = str(data)
         df = pd.read_csv(data)
-        sized_df = set_df_size(df, 150)
+        # sized_df = set_df_size(df, 150)
+        sized_df = set_df_size(df, 0)
 
         # create eda folders for each ticker
         ticker = get_ticker(file_name)
         create_output_folder(ticker)
 
         # get basic statistics of data 
-        summarise_data(file_name, True, 150)
+        summarise_data(file_name, True, 0)
 
         # # Get Auto Correlation Graphs of Close Price
         genACFGraphs(sized_df,ticker,"Close", True)
