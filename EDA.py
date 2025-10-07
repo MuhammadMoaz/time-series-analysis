@@ -125,11 +125,11 @@ def genHistogram(var_name, file_name):
         ticker = get_ticker(file_name)
         df = pd.read_csv(data)
         df["Date"] = pd.to_datetime(df["Date"])
-        df.drop(index=0)
+        df.dropna()
 
         ax = plt.subplot(3,3,i)
        
-        ax.hist(df[var_name], color="blue")
+        ax.hist(df[var_name], color="blue", histtype='stepfilled')
         ax.set_title(f"{ticker} Histogram of {var_name} Close Price")
 
     plt.tight_layout()
@@ -143,9 +143,18 @@ def genCorrMatrix(data, ticker):
 
     columns = data.columns.tolist()
     columns.remove('Date')
+    columns.remove('Differenced')
+    columns.remove('Log_Returns')
+
     col_data = data[columns]
+    col_data['Close'] = data['Close'].diff().dropna()
+    col_data['High'] = data['High'].diff().dropna()
+    col_data['Low'] = data['Low'].diff().dropna()
+    col_data['Open'] = data['Open'].diff().dropna()
+
     corr_matrix = col_data.corr()
     sns.heatmap(corr_matrix, cmap="YlGnBu", annot=True)
+    plt.title(f"{ticker} Correlation Matrix (Difference in Close)")
     plt.savefig(file_path)
     plt.clf()
 # Visualisation 3 - Line Graph
@@ -201,18 +210,16 @@ def movAveragePlot():
         ticker = get_ticker(file_name)
         df = pd.read_csv(data)
         df["Date"] = pd.to_datetime(df["Date"])
-        df['Moving_Average'] = df['Close'].rolling(window=100).mean() 
-        df['Log_Returns'] = np.log(df['Close'] / df['Close'].shift(1))
+        df['Moving_Average'] = df['Close'].rolling(window=100).mean()
         df.drop(df.index[0])  
         
         ax = plt.subplot(3,3,i)
 
-        ax.plot(df["Date"], df["Log_Returns"], color = "blue", lw=1, label="Close")
-        # ax.plot(df["Date"], df["Moving_Average"], color = "red", linestyle="--", lw=2, label = "MA")
+        ax.plot(df["Date"], df["Close"], lw=1, label="Close")
+        ax.plot(df["Date"], df["Moving_Average"], linestyle="--", lw=2, label = "MA")
         
         ax.xaxis.set_major_locator(mdates.YearLocator())
         ax.set_ylabel("MA Close Price")
-        # ax.set_xlabel("Date")
         plt.xticks(rotation = 70)
         ax.legend()
         ax.set_title(f"{ticker} MA Close Price")
@@ -230,9 +237,11 @@ def main():
     # genLineSub("Log_Returns", "Group_LogReturnsLineGraphs", 'm', 150)
     # genLineSub("Differenced", "Group_DiffLineGraphs", 'm', 150)
 
-    genLineSub("Close", "Group_ClosePLineGraphs")
-    genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
-    genLineSub("Differenced", "Group_DiffLineGraphs")
+    # genLineSub("Close", "Group_ClosePLineGraphs")
+    # genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
+    # genLineSub("Differenced", "Group_DiffLineGraphs")
+    genHistogram("Differenced", "Group_Diff_Histogram")
+    movAveragePlot()
 
     # to make individual plots for each ticker
     for data in datasets:
@@ -245,15 +254,17 @@ def main():
         ticker = get_ticker(file_name)
         create_output_folder(ticker)
 
-        # get basic statistics of data 
-        summarise_data(file_name, True, 0)
+        # # get basic statistics of data 
+        # summarise_data(file_name, True, 0)
 
-        # # Get Auto Correlation Graphs of Close Price
-        genACFGraphs(sized_df,ticker,"Close", True)
-        genACFGraphs(sized_df,ticker,"Differenced", True)
-        genACFGraphs(sized_df,ticker,"Log_Returns", True)
+        # # # Get Auto Correlation Graphs of Close Price
+        # genACFGraphs(sized_df,ticker,"Close", True)
+        # genACFGraphs(sized_df,ticker,"Differenced", True)
+        # genACFGraphs(sized_df,ticker,"Log_Returns", True)
 
         # basic visualisation of data
-        #     # corr matrix thingy
+        # corr matrix thingy
+        # genCorrMatrix(df, ticker)
+        
   
 main()
