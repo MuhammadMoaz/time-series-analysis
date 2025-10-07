@@ -1,12 +1,13 @@
-import pickle as pkl
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
+import pandas as pd
+import datetime as dt
+import urllib.request, json
 import os
 from pathlib import Path
+import numpy as np
+import tensorflow as tf
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import root_mean_squared_error, r2_score, mean_absolute_percentage_error, mean_absolute_error
 
 def create_output_folder(file_name, ticker):
     dir_name = f"PDAOutput/PDA_{ticker}"
@@ -17,14 +18,6 @@ def get_ticker(file_name):
     NameParts = strName.split('.')
     return NameParts[0]
 
-# Create training dataset
-def create_dataset(dataset, time_step=60):
-    X, y = [], []
-    for i in range(len(dataset) - time_step - 1):
-        X.append(dataset[i:(i + time_step), 0])
-        y.append(dataset[i + time_step, 0])
-    return np.array(X), np.array(y)
-
 def main():
     datasets = Path("datasets").rglob("*.csv")
 
@@ -34,64 +27,69 @@ def main():
         ticker = get_ticker(file_name)
         create_output_folder(file_name, ticker)
 
-        # Ensure Date is datetime
+        # # Ensure Date is datetime
         df['Date'] = pd.to_datetime(df['Date'])
-        df.set_index('Date', inplace=True)
+        df['Date'] = df['Date'].dt.date
 
-        # Use only Close prices for forecasting
-        data = df[['Close']].values
+        close_prices = df.loc[:,'Close'].to_numpy()
 
-        # normalised data between range of 0 and 1
-        scaler = MinMaxScaler(feature_range=(0, 1))
-        scaled_data = scaler.fit_transform(data)
+        train_size = int(len(close_prices) * 0.8)
+        train_data = close_prices[:train_size].reshape(-1, 1)
+        test_data = close_prices[train_size:].reshape(-1, 1)
 
-        time_step = 60  # 60 days lookback
-        X, y = create_dataset(scaled_data, time_step)
+        scaler = MinMaxScaler()
+        train_data = scaler.fit_transform(train_data).reshape(-1)
+        test_data = scaler.transform(test_data).reshape(-1)
 
-        # Reshape input to [samples, time_steps, features] for LSTM
-        X = X.reshape(X.shape[0], X.shape[1], 1)
+        EMA = 0.0
+        gamma = 0.1
+        for ti in range(len(train_data)):
+            EMA = gamma*train_data[ti] + (1-gamma)*EMA
+            train_data[ti] = EMA
 
-        # Split into train/test
-        train_size = int(len(X) * 0.8)
-        X_train, X_test = X[:train_size], X[train_size:]
-        y_train, y_test = y[:train_size], y[train_size:]
+        all_close_data = np.concatenate([train_data, test_data], axis=0)
 
-        # Build the LSTM model
-        model = Sequential([
-            LSTM(50, return_sequences=True, input_shape=(time_step, 1)),
-            Dropout(0.2), # Randomly drops 20% of neurons, prevents overfitting
-            LSTM(50, return_sequences=False),
-            Dropout(0.2),
-            Dense(25), # hideen fully connected layer for non-linear transformation.
-            Dense(1) # output layer
-        ])
+        # EMA Averaging
+        N = all_close_data.size
+        train_size = int(len(all_close_data) * 0.8)
 
-        model.compile(optimizer='adam', loss='mean_squared_error') # adam = adaptive learning
-        model.fit(X_train, y_train, epochs=20, batch_size=32, verbose=1)
+        run_avg_predictions = []
+        mse_errors = []
 
-        # Make predictions
-        train_predict = model.predict(X_train)
-        test_predict = model.predict(X_test)
+        running_mean = 0.0
+        decay = 0.5
 
-        # Inverse transform predictions
-        train_predict = scaler.inverse_transform(train_predict)
-        test_predict = scaler.inverse_transform(test_predict)
+        # Predict only on test set
+        for pred_idx in range(train_size, N):
+            running_mean = running_mean*decay + (1.0-decay)*all_close_data[pred_idx-1]
+            run_avg_predictions.append(running_mean)
+            mse_errors.append((run_avg_predictions[-1] - all_close_data[pred_idx])**2)
 
-        y_train = scaler.inverse_transform(y_train.reshape(-1, 1))
-        y_test = scaler.inverse_transform(y_test.reshape(-1, 1))
+        mse = np.mean(mse_errors)
+        rmse = np.sqrt(mse)
 
-        # Visualization
-        train_dates = df.index[time_step:train_size+time_step]
-        test_dates = df.index[train_size+time_step+1:]
+        # Convert predictions and true values back into numpy arrays for metrics
+        y_true = all_close_data[train_size:]
+        y_pred = np.array(run_avg_predictions)
 
-        plt.figure(figsize=(12,6))
-        plt.plot(df.index, df['Close'], label="Actual Close Price", color="blue")
-        plt.plot(test_dates, test_predict, label="Test Predictions", color="red", linestyle='--')
-        plt.xlabel("Date")
-        plt.ylabel("Price")
-        plt.title(f"{ticker} Stock Close Price Forecast with LSTM")
-        plt.legend()
-        plt.grid()
-        plt.show()
+        mae = mean_absolute_error(y_true, y_pred)
+        mape = mean_absolute_percentage_error(y_true, y_pred)
+        r2 = r2_score(y_true, y_pred)
+
+        print(f'{ticker} MSE error for EMA averaging (test only): %.5f' % (0.5*np.mean(mse_errors)))
+        print(f'{ticker} RMSE error for EMA averaging (test only): {rmse:.5f}')
+        print(f'{ticker} MAE error for EMA averaging: {mae}')
+        print(f'{ticker} MAPE error for EMA averaging: {mape}')
+        print(f'{ticker} R^2 score for EMA averaging: {r2}')
+
+        plt.figure(figsize=(18,9))
+        plt.title(f"{ticker} EMA Averaging Forecast")
+        plt.plot(range(df.shape[0]), all_close_data, color='b', label='True')
+        plt.plot(range(train_size, N), run_avg_predictions, color='orange', label='Prediction')
+        plt.xlabel('Date')
+        plt.ylabel('Mid Price')
+        plt.legend(fontsize=18)
+        plt.savefig(f"PDAOutput/PDA_{ticker}/{ticker}_LSTM.png")
+        plt.clf()
 
 main()
