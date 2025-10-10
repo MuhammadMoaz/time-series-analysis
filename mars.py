@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score, mean_absolute_error, mean_absolute_percentage_error, root_mean_squared_error
 from pyearth import Earth
 
-def create_output_folder(file_name, ticker):
+def create_output_folder(ticker):
     dir_name = f"PDAOutput/PDA_{ticker}"
     os.makedirs(dir_name, exist_ok=True)
 
@@ -22,7 +22,7 @@ def main():
         file_name = str(data)
         df = pd.read_csv(data)
         ticker = get_ticker(file_name)
-        create_output_folder(file_name, ticker)
+        create_output_folder(ticker)
 
         # Sort dates
         df['Date'] = pd.to_datetime(df['Date'])
