@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib.dates as mdates
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import r2_score, mean_absolute_percentage_error, mean_absolute_error
+from sklearn.metrics import r2_score, mean_absolute_percentage_error, mean_absolute_error, root_mean_squared_error
 
 def create_output_folder(file_name, ticker):
     dir_name = f"PDAOutput/PDA_{ticker}"
@@ -75,12 +75,22 @@ def main():
         mae = mean_absolute_error(y_true, y_pred)
         mape = mean_absolute_percentage_error(y_true, y_pred)
         r2 = r2_score(y_true, y_pred)
+        rmse = root_mean_squared_error(y_true, y_pred)
 
-        print(f'{ticker} MSE error for EMA averaging (test only): %.5f' % (0.5*np.mean(mse_errors)))
-        print(f'{ticker} RMSE error for EMA averaging (test only): {rmse:.5f}')
-        print(f'{ticker} MAE error for EMA averaging: {mae}')
-        print(f'{ticker} MAPE error for EMA averaging: {mape}')
-        print(f'{ticker} R^2 score for EMA averaging: {r2}')
+        print(f"{ticker} | MAE: {mae:.3f}, RMSE: {rmse:.3f}, MAPE: {mape*100:.2f}%, R2: {r2:.3f}")
+
+        # Saving metrics to CSV
+        results = {
+            "Ticker": ticker, 
+            "Model": "LSTM", 
+            "MAE": mae, 
+            "MAPE": mape, 
+            "RMSE": rmse, 
+            "R2": r2
+        }
+
+        results_df = pd.DataFrame([results])
+        results_df.to_csv("metrics.csv", mode='a+', header=not os.path.exists("metrics.csv"), index=False)
 
         # used to get dates for test set plot 
         test_set = df[train_size:]

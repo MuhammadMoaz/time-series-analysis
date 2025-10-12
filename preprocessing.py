@@ -9,6 +9,9 @@ def fetch_data(ticker_symbol):
     data['Differenced'] = data["Close"].diff()
     data.to_csv(f"datasets/{filename}")
 
+def create_metrics_csv():
+    pd.DataFrame(columns=["Ticker","Model","MAE","RMSE","MAPE","R2"]).to_csv("PDAOutput/metrics.csv", index=False)
+
 def main():
     # Banks
     fetch_data("CBA.AX")
@@ -25,4 +28,6 @@ def main():
     fetch_data("RMD.AX")
     fetch_data("PME.AX")
 
+    create_metrics_csv()
+    
 main()

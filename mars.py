@@ -64,6 +64,19 @@ def main():
 
         print(f"{ticker} | MAE: {mae:.3f}, RMSE: {rmse:.3f}, MAPE: {mape*100:.2f}%, R2: {r2:.3f}")
 
+        results = {
+            "Ticker": ticker, 
+            "Model": "MARS", 
+            "MAE": mae, 
+            "MAPE": mape, 
+            "RMSE": rmse, 
+            "R2": r2
+        }
+
+        results_df = pd.DataFrame([results])
+        results_df.to_csv("metrics.csv", mode='a+', header=not os.path.exists("metrics.csv"), index=False)
+
+
         plt.figure(figsize=(18, 9))
         plt.plot(dates, y, label="True")
         plt.plot(dates_test, y_pred, label="MARS Forecast", linestyle="--")
