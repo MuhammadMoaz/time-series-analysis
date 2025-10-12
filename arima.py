@@ -134,13 +134,14 @@ def ARIMAForcast(df, ticker, p,d,q):
     r2 = r2_score(test_set["Close"], list(pred_mean))
 
     print(f"{ticker} | MAE: {mae:.3f}, RMSE: {rmse:.3f}, MAPE: {mape*100:.2f}%, R2: {r2:.3f}")
+    # print(f"{ticker} | RMSE: {rmse:.3f}")
 
     results = {
             "Ticker": ticker, 
             "Model": "ARIMA", 
             "MAE": mae, 
-            "MAPE": mape, 
             "RMSE": rmse, 
+            "MAPE": mape, 
             "R2": r2
         }
 
