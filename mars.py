@@ -72,7 +72,7 @@ def main():
 
         ax = plt.gca()
         ax.xaxis.set_major_locator(mdates.YearLocator())
-        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+        # ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
         plt.xticks(rotation=45)
 
         plt.savefig(f"PDAOutput/PDA_{ticker}/{ticker}_MARS.png")
