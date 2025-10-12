@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from sklearn.metrics import r2_score, mean_absolute_error, mean_absolute_percentage_error, root_mean_squared_error
 from pyearth import Earth
 
@@ -68,6 +69,12 @@ def main():
         plt.plot(dates_test, y_pred, label="MARS Forecast", linestyle="--")
         plt.title(f"{ticker} MARS forecast")
         plt.legend()
+
+        ax = plt.gca()
+        ax.xaxis.set_major_locator(mdates.YearLocator())
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
+        plt.xticks(rotation=45)
+
         plt.savefig(f"PDAOutput/PDA_{ticker}/{ticker}_MARS.png")
         plt.clf()
 
