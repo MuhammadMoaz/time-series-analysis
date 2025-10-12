@@ -3,7 +3,7 @@ import numpy as np
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.arima.model import sarimax
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, root_mean_squared_error, r2_score
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import seaborn as sns
@@ -128,17 +128,24 @@ def ARIMAForcast(df, ticker, p,d,q):
 
     # getting forecast metrics, adding them to txt file
     # print(list(pred_mean))
-    rmse = np.sqrt(mean_squared_error(test_set["Close"], list(pred_mean))) 
+    rmse = root_mean_squared_error(test_set["Close"], list(pred_mean))
     mape = mean_absolute_percentage_error(test_set["Close"], list(pred_mean))
     mae = mean_absolute_error(test_set["Close"], list(pred_mean))
     r2 = r2_score(test_set["Close"], list(pred_mean))
 
-    with open(f"{dirName}/{ticker}_model_metrics.txt", 'w+') as f:
-        f.write(f"The following are the metrics for {ticker}'s ARIMA model:\n")
-        f.write(f"RMSE: {rmse}\n")
-        f.write(f"MAPE: {mape}\n")
-        f.write(f"MAE: {mae}\n")
-        f.write(f"R^2: {r2}\n")
+    print(f"{ticker} | MAE: {mae:.3f}, RMSE: {rmse:.3f}, MAPE: {mape*100:.2f}%, R2: {r2:.3f}")
+
+    results = {
+            "Ticker": ticker, 
+            "Model": "MARS", 
+            "MAE": mae, 
+            "MAPE": mape, 
+            "RMSE": rmse, 
+            "R2": r2
+        }
+
+    results_df = pd.DataFrame([results])
+    results_df.to_csv("metrics.csv", mode='a+', header=not os.path.exists("metrics.csv"), index=False)
 
 def main():
     warnings.filterwarnings("ignore") # remove later
@@ -185,6 +192,5 @@ def main():
     # ARIMA 9 WBC
     CustomARIMAStats(pd.read_csv(dataset_list[8]),ticker_list[8],3,1,3)
     ARIMAForcast(pd.read_csv(dataset_list[8]),ticker_list[8],3,1,3)
-
 
 main()
