@@ -158,33 +158,33 @@ def main():
         # AICHelper(df, ticker)
 
 
-    # # # ARIMA 1 AMC 212
-    CustomARIMAStats(pd.read_csv(dataset_list[0]),ticker_list[0],1,1,2)
-    ARIMAForcast(pd.read_csv(dataset_list[0]),ticker_list[0],1,1,2)
-    # ARIMA 2 BHP
+    # ARIMA 1 AMC 212
+    # CustomARIMAStats(pd.read_csv(dataset_list[0]),ticker_list[0],3,1,6)
+    # ARIMAForcast(pd.read_csv(dataset_list[0]),ticker_list[0],3,1,6)
+    # # ARIMA 2 BHP
     CustomARIMAStats(pd.read_csv(dataset_list[1]),ticker_list[1],2,1,2)
     ARIMAForcast(pd.read_csv(dataset_list[1]),ticker_list[1],2,1,2)
     # ARIMA 3 CBA
-    CustomARIMAStats(pd.read_csv(dataset_list[2]),ticker_list[2],2,1,2)
-    ARIMAForcast(pd.read_csv(dataset_list[2]),ticker_list[2],2,1,2)
-    # ARIMA 4 CSL
-    CustomARIMAStats(pd.read_csv(dataset_list[3]),ticker_list[3],1,2,2)
-    ARIMAForcast(pd.read_csv(dataset_list[3]),ticker_list[3],1,2,2)
-    # ARIMA 5 NAB
-    CustomARIMAStats(pd.read_csv(dataset_list[4]),ticker_list[4],1,1,2)
-    ARIMAForcast(pd.read_csv(dataset_list[4]),ticker_list[4],1,1,2)
-    # ARIMA 6 PME
-    CustomARIMAStats(pd.read_csv(dataset_list[5]),ticker_list[5],1,2,2)
-    ARIMAForcast(pd.read_csv(dataset_list[5]),ticker_list[5],1,2,2)
-    # ARIMA 7 RIO
-    CustomARIMAStats(pd.read_csv(dataset_list[6]),ticker_list[6],2,1,2)
-    ARIMAForcast(pd.read_csv(dataset_list[6]),ticker_list[6],0,1,1)
-    # ARIMA 8 RMD
-    CustomARIMAStats(pd.read_csv(dataset_list[7]),ticker_list[7],2,1,2)   
-    ARIMAForcast(pd.read_csv(dataset_list[7]),ticker_list[7],2,1,2)
-    # ARIMA 9 WBC
-    CustomARIMAStats(pd.read_csv(dataset_list[8]),ticker_list[8],2,1,1)
-    ARIMAForcast(pd.read_csv(dataset_list[8]),ticker_list[8],2,1,1)
+    # CustomARIMAStats(pd.read_csv(dataset_list[2]),ticker_list[2],2,1,2)
+    # ARIMAForcast(pd.read_csv(dataset_list[2]),ticker_list[2],2,1,2)
+    # # ARIMA 4 CSL
+    # CustomARIMAStats(pd.read_csv(dataset_list[3]),ticker_list[3],1,2,2)
+    # ARIMAForcast(pd.read_csv(dataset_list[3]),ticker_list[3],1,2,2)
+    # # ARIMA 5 NAB
+    # CustomARIMAStats(pd.read_csv(dataset_list[4]),ticker_list[4],1,1,2)
+    # ARIMAForcast(pd.read_csv(dataset_list[4]),ticker_list[4],1,1,2)
+    # # ARIMA 6 PME
+    # CustomARIMAStats(pd.read_csv(dataset_list[5]),ticker_list[5],1,2,2)
+    # ARIMAForcast(pd.read_csv(dataset_list[5]),ticker_list[5],1,2,2)
+    # # ARIMA 7 RIO
+    # CustomARIMAStats(pd.read_csv(dataset_list[6]),ticker_list[6],2,1,2)
+    # ARIMAForcast(pd.read_csv(dataset_list[6]),ticker_list[6],0,1,1)
+    # # ARIMA 8 RMD
+    # CustomARIMAStats(pd.read_csv(dataset_list[7]),ticker_list[7],2,1,2)   
+    # ARIMAForcast(pd.read_csv(dataset_list[7]),ticker_list[7],2,1,2)
+    # # ARIMA 9 WBC
+    # CustomARIMAStats(pd.read_csv(dataset_list[8]),ticker_list[8],2,1,1)
+    # ARIMAForcast(pd.read_csv(dataset_list[8]),ticker_list[8],2,1,1)
 
 
 main()

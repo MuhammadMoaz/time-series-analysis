@@ -190,10 +190,10 @@ def genACFGraphs(data, ticker, var_name, train_split = False):
 
     fig, (ax1, ax2) = plt.subplots(2,1, figsize = (15, 15))
 
-    plot_acf(data[var_name], lags=25, auto_ylims=True, missing="drop", 
+    plot_acf(data[var_name], lags=50, auto_ylims=True, missing="drop", 
              zero=False, color="red", alpha=0.05, ax=ax1, title="ACF")
     
-    plot_pacf(data[var_name].dropna(), lags=25, alpha=0.05, zero=False, ax=ax2,
+    plot_pacf(data[var_name].dropna(), lags=50, alpha=0.05, zero=False, ax=ax2,
               auto_ylims=True, title="PACF")
     
     plt.savefig(file_path)
@@ -234,9 +234,6 @@ def sectorCorr(var_name, file_name):
     file_path = f"EDAOutput/{file_name}.png"
 
     plt.figure(figsize=(20,10))
-
-    # create new data frame with top 3 stocks
-    top_three = 'a'
 
 def main():
     datasets = Path("datasets").rglob("*.csv")
