@@ -82,8 +82,8 @@ def main():
         print(f'{ticker} MAPE error for EMA averaging: {mape}')
         print(f'{ticker} R^2 score for EMA averaging: {r2}')
 
+        # used to get dates for test set plot 
         test_set = df[train_size:]
-
 
         plt.figure(figsize=(18,9))
         plt.title(f"{ticker} EMA Averaging Forecast")
