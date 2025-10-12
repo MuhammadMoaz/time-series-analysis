@@ -2,8 +2,8 @@
 ==============================================================================
 Dep. Variable:                  Close   No. Observations:                 4881
 Model:                 ARIMA(2, 2, 1)   Log Likelihood                1758.297
-Date:                Sun, 12 Oct 2025   AIC                          -3508.594
-Time:                        23:43:12   BIC                          -3482.623
+Date:                Mon, 13 Oct 2025   AIC                          -3508.594
+Time:                        01:44:24   BIC                          -3482.623
 Sample:                             0   HQIC                         -3499.480
                                - 4881                                         
 Covariance Type:                  opg                                         

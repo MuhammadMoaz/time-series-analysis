@@ -124,6 +124,7 @@ def ARIMAForcast(df, ticker, p,d,q):
 
     plt.tight_layout()
     plt.savefig(file_path)
+    plt.savefig(f"PDAOutput/PDA_{ticker}/{ticker}_ARIMA.png")
     plt.clf()
 
     # getting forecast metrics, adding them to txt file
