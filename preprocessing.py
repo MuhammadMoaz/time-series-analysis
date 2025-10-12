@@ -10,23 +10,23 @@ def fetch_data(ticker_symbol):
     data.to_csv(f"datasets/{filename}")
 
 def create_metrics_csv():
-    pd.DataFrame(columns=["Ticker","Model","MAE","RMSE","MAPE","R2"]).to_csv("PDAOutput/metrics.csv", index=False)
+    pd.DataFrame(columns=["Ticker","Model","MAE","RMSE","MAPE","R2"]).to_csv("metrics.csv", index=False)
 
 def main():
     # Banks
-    fetch_data("CBA.AX")
-    fetch_data("WBC.AX")
-    fetch_data("NAB.AX")
+    # fetch_data("CBA.AX")
+    # fetch_data("WBC.AX")
+    # fetch_data("NAB.AX")
 
-    # Materials
-    fetch_data("BHP.AX")
-    fetch_data("AMC.AX")
-    fetch_data("RIO.AX")
+    # # Materials
+    # fetch_data("BHP.AX")
+    # fetch_data("AMC.AX")
+    # fetch_data("RIO.AX")
 
-    # Healthcare
-    fetch_data("CSL.AX")
-    fetch_data("RMD.AX")
-    fetch_data("PME.AX")
+    # # Healthcare
+    # fetch_data("CSL.AX")
+    # fetch_data("RMD.AX")
+    # fetch_data("PME.AX")
 
     create_metrics_csv()
     
