@@ -137,7 +137,7 @@ def ARIMAForcast(df, ticker, p,d,q):
 
     results = {
             "Ticker": ticker, 
-            "Model": "MARS", 
+            "Model": "ARIMA", 
             "MAE": mae, 
             "MAPE": mape, 
             "RMSE": rmse, 
