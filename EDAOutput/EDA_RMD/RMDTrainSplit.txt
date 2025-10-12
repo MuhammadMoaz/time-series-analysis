@@ -29,12 +29,12 @@ Differenced    1
 dtype: int64
 Average Close Price: 4.96
 
-ADF Statistic: 5.680683222254227. P-value: 1.0
+ADF Statistic: 5.680683222254232. P-value: 1.0
 The Close Price data is Non-stationary with a critical value of 5%
 
 ADF Statistic: -70.9922796235829. P-value: 0.0
 The Log Return Close Price data is Stationary with a critical value of 5%
 
-ADF Statistic: -11.514774109312919. P-value: 4.1758414304292326e-21
+ADF Statistic: -11.514774109312937. P-value: 4.175841430428842e-21
 The Differened Close Price data is Stationary with a critical value of 5%
 

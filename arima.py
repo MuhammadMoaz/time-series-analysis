@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.arima.model import sarimax
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from sklearn.metrics import mean_absolute_error, mean_absolute_percentage_error, mean_squared_error, r2_score
 import matplotlib.pyplot as plt
@@ -29,7 +30,7 @@ def AICHelper(df, ticker):
     df = set_df_size(df, 0)
     df.dropna()
 
-    train_size = int(len(df)*0.8) #80 / 20 train test split
+    train_size = int(len(df) - 60) #60 day of test
     # test train, dataframes 
     train_set = df.iloc[:train_size]
 
@@ -37,23 +38,18 @@ def AICHelper(df, ticker):
     best_p = 0
     best_q = 0
 
-    for p in range(6):
-        for q in range(6):
-            try:
-                model = ARIMA(train_set["Close"], order=(p, 1, q))
-                result = model.fit()
+    for p in range(3):
+        for d in range(3):
+            for q in range(3):
+                try:
+                    model = ARIMA(train_set["Close"], order=(p, d, q))
+                    result = model.fit()
+                    print (ticker, p, d, q, ": ", result.aic)
 
-                if p == 0 and q == 0:
-                    lowest_AIC = result.aic
-                elif result.aic < lowest_AIC:
-                    lowest_AIC = result.aic
-                    best_p = p
-                    best_q = q
+                except:
+                    print ("No AIC value")
 
-            except:
-                print ("No AIC value")
-
-    print (ticker, best_p, 1, best_q, ": ", result.aic)
+    print (" ")
         
 def CustomARIMAStats(df, ticker, p, d, q):
     dirName = f"ARIMAOutput/ARIMA_{ticker}"
@@ -62,7 +58,7 @@ def CustomARIMAStats(df, ticker, p, d, q):
     df.dropna()
     df = set_df_size(df, 0)
 
-    train_size = int(len(df)*0.8) #80 / 20 train test split
+    train_size = int(len(df) - 60)#80 / 20 train test split
     # test train, dataframes 
     train_set = df.iloc[:train_size]
     test_set = df.iloc[train_size:]
@@ -84,8 +80,8 @@ def CustomARIMAStats(df, ticker, p, d, q):
     residuals = res.resid[1:]
     fig, (ax1, ax2) = plt.subplots(2,1)
     plot_acf(residuals, lags=25, auto_ylims=True, missing="drop", 
-             zero=False, color="red", alpha=0.05, ax=ax1, title="ACF")
-    plot_pacf(residuals, lags=25, alpha=0.05, zero=False, ax=ax2,
+             zero=True, color="red", alpha=0.05, ax=ax1, title="ACF")
+    plot_pacf(residuals, lags=25, alpha=0.05, zero=True, ax=ax2,
               auto_ylims=True, title="PACF")
     plt.savefig(f"{dirName}/{ticker}_Residual_ACF.png")
     plt.clf()
@@ -97,7 +93,7 @@ def ARIMAForcast(df, ticker, p,d,q):
     # change size / number of days to work with
     df = set_df_size(df, 0)
 
-    train_size = int(len(df)*0.8)
+    train_size = int(len(df) - 60)
     # test train, dataframes 
     train_set = df.iloc[:train_size]
     test_set = df.iloc[train_size:]
@@ -162,33 +158,33 @@ def main():
         # AICHelper(df, ticker)
 
 
-    # ARIMA 1 AMC
-    CustomARIMAStats(pd.read_csv(dataset_list[0]),ticker_list[0],5,1,5)
-    ARIMAForcast(pd.read_csv(dataset_list[0]),ticker_list[0],5,1,5)
-    # ARIMA 2 BHP
-    CustomARIMAStats(pd.read_csv(dataset_list[1]),ticker_list[1],3,1,3)
-    ARIMAForcast(pd.read_csv(dataset_list[1]),ticker_list[1],3,1,3)
-    # ARIMA 3 CBA
-    CustomARIMAStats(pd.read_csv(dataset_list[2]),ticker_list[2],4,1,4)
-    ARIMAForcast(pd.read_csv(dataset_list[2]),ticker_list[2],4,1,4)
-    # ARIMA 4 CSL
-    CustomARIMAStats(pd.read_csv(dataset_list[3]),ticker_list[3],4,1,4)
-    ARIMAForcast(pd.read_csv(dataset_list[3]),ticker_list[3],4,1,4)
-    # ARIMA 5 NAB
-    CustomARIMAStats(pd.read_csv(dataset_list[4]),ticker_list[4],1,1,3)
-    ARIMAForcast(pd.read_csv(dataset_list[4]),ticker_list[4],1,1,3)
-    # ARIMA 6 PME
-    CustomARIMAStats(pd.read_csv(dataset_list[5]),ticker_list[5],4,1,4)
-    ARIMAForcast(pd.read_csv(dataset_list[5]),ticker_list[5],4,1,4)
-    # ARIMA 7 RIO
-    CustomARIMAStats(pd.read_csv(dataset_list[6]),ticker_list[6],5,1,5)
-    ARIMAForcast(pd.read_csv(dataset_list[6]),ticker_list[6],5,1,5)
-    # ARIMA 8 RMD
-    CustomARIMAStats(pd.read_csv(dataset_list[7]),ticker_list[7],5,1,4)   
-    ARIMAForcast(pd.read_csv(dataset_list[7]),ticker_list[7],5,1,4)
-    # ARIMA 9 WBC
-    CustomARIMAStats(pd.read_csv(dataset_list[8]),ticker_list[8],5,1,0)
-    ARIMAForcast(pd.read_csv(dataset_list[8]),ticker_list[8],5,1,0)
+    # # # ARIMA 1 AMC 212
+    CustomARIMAStats(pd.read_csv(dataset_list[0]),ticker_list[0],2,1,6)
+    ARIMAForcast(pd.read_csv(dataset_list[0]),ticker_list[0],2,1,6)
+    # # ARIMA 2 BHP
+    # CustomARIMAStats(pd.read_csv(dataset_list[1]),ticker_list[1],1,1,1)
+    # ARIMAForcast(pd.read_csv(dataset_list[1]),ticker_list[1],1,1,1)
+    # # ARIMA 3 CBA
+    # CustomARIMAStats(pd.read_csv(dataset_list[2]),ticker_list[2],0,1,0)
+    # ARIMAForcast(pd.read_csv(dataset_list[2]),ticker_list[2],0,1,0)
+    # # ARIMA 4 CSL
+    # CustomARIMAStats(pd.read_csv(dataset_list[3]),ticker_list[3],0,1,0)
+    # ARIMAForcast(pd.read_csv(dataset_list[3]),ticker_list[3],0,1,0)
+    # # ARIMA 5 NAB
+    # CustomARIMAStats(pd.read_csv(dataset_list[4]),ticker_list[4],0,1,0)
+    # ARIMAForcast(pd.read_csv(dataset_list[4]),ticker_list[4],0,1,0)
+    # # ARIMA 6 PME
+    # CustomARIMAStats(pd.read_csv(dataset_list[5]),ticker_list[5],1,1,1)
+    # ARIMAForcast(pd.read_csv(dataset_list[5]),ticker_list[5],1,1,1)
+    # # ARIMA 7 RIO
+    # CustomARIMAStats(pd.read_csv(dataset_list[6]),ticker_list[6],0,1,1)
+    # ARIMAForcast(pd.read_csv(dataset_list[6]),ticker_list[6],0,1,1)
+    # # ARIMA 8 RMD
+    # CustomARIMAStats(pd.read_csv(dataset_list[7]),ticker_list[7],0,1,2)   
+    # ARIMAForcast(pd.read_csv(dataset_list[7]),ticker_list[7],0,1,2)
+    # # ARIMA 9 WBC
+    # CustomARIMAStats(pd.read_csv(dataset_list[8]),ticker_list[8],0,1,0)
+    # ARIMAForcast(pd.read_csv(dataset_list[8]),ticker_list[8],0,1,0)
 
 
 main()

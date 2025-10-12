@@ -32,7 +32,7 @@ Average Close Price: 10.57
 ADF Statistic: -1.1771158561397128. P-value: 0.6833616236286604
 The Close Price data is Non-stationary with a critical value of 5%
 
-ADF Statistic: -42.369957570929834. P-value: 0.0
+ADF Statistic: -42.36995757092986. P-value: 0.0
 The Log Return Close Price data is Stationary with a critical value of 5%
 
 ADF Statistic: -71.19958354197338. P-value: 0.0

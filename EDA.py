@@ -228,18 +228,27 @@ def movAveragePlot():
     plt.savefig(file_path)
     plt.clf()
 
+# get corr between close price returns for top performerms in each sector
+def sectorCorr(var_name, file_name):
+    datasets = Path("datasets").rglob("*.csv")
+    file_path = f"EDAOutput/{file_name}.png"
+
+    plt.figure(figsize=(20,10))
+
+    # create new data frame with top 3 stocks
+    top_three = 'a'
 
 def main():
     datasets = Path("datasets").rglob("*.csv")
 
     # plot line graphs for Close LR and Diff
-    # genLineSub("Close", "Group_ClosePLineGraphs", 'm', 150)
-    # genLineSub("Log_Returns", "Group_LogReturnsLineGraphs", 'm', 150)
-    # genLineSub("Differenced", "Group_DiffLineGraphs", 'm', 150)
+    # genLineSub("Close", "Group_ClosePLineGraphs", 'm', 100)
+    # genLineSub("Log_Returns", "Group_LogReturnsLineGraphs", 'm', 100)
+    # genLineSub("Differenced", "Group_DiffLineGraphs", 'm', 100)
 
-    # genLineSub("Close", "Group_ClosePLineGraphs")
-    # genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
-    # genLineSub("Differenced", "Group_DiffLineGraphs")
+    genLineSub("Close", "Group_ClosePLineGraphs")
+    genLineSub("Log_Returns", "Group_LogReturnsLineGraphs")
+    genLineSub("Differenced", "Group_DiffLineGraphs")
     genHistogram("Differenced", "Group_Diff_Histogram")
     movAveragePlot()
 
@@ -247,7 +256,7 @@ def main():
     for data in datasets:
         file_name = str(data)
         df = pd.read_csv(data)
-        # sized_df = set_df_size(df, 150)
+        # sized_df = set_df_size(df, 100)
         sized_df = set_df_size(df, 0)
 
         # create eda folders for each ticker
@@ -255,16 +264,19 @@ def main():
         create_output_folder(ticker)
 
         # # get basic statistics of data 
-        # summarise_data(file_name, True, 0)
+        summarise_data(file_name, True, 0)
 
         # # # Get Auto Correlation Graphs of Close Price
-        # genACFGraphs(sized_df,ticker,"Close", True)
-        # genACFGraphs(sized_df,ticker,"Differenced", True)
-        # genACFGraphs(sized_df,ticker,"Log_Returns", True)
+        genACFGraphs(sized_df,ticker,"Close", True)
+        genACFGraphs(sized_df,ticker,"Differenced", True)
+        genACFGraphs(sized_df,ticker,"Log_Returns", True)
 
         # basic visualisation of data
         # corr matrix thingy
         # genCorrMatrix(df, ticker)
+
+        # if ticker == "CBA" or ticker == "BHP" or ticker == "csl":
+        #     sectorCorr(df, ticker)
         
   
 main()
