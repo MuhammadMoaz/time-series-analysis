@@ -5,9 +5,9 @@ import urllib.request, json
 import os
 from pathlib import Path
 import numpy as np
-import tensorflow as tf
+import matplotlib.dates as mdates
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import root_mean_squared_error, r2_score, mean_absolute_percentage_error, mean_absolute_error
+from sklearn.metrics import r2_score, mean_absolute_percentage_error, mean_absolute_error
 
 def create_output_folder(file_name, ticker):
     dir_name = f"PDAOutput/PDA_{ticker}"
@@ -82,10 +82,16 @@ def main():
         print(f'{ticker} MAPE error for EMA averaging: {mape}')
         print(f'{ticker} R^2 score for EMA averaging: {r2}')
 
+        test_set = df[train_size:]
+
+
         plt.figure(figsize=(18,9))
         plt.title(f"{ticker} EMA Averaging Forecast")
-        plt.plot(range(df.shape[0]), all_close_data, color='b', label='True')
-        plt.plot(range(train_size, N), run_avg_predictions, color='orange', label='Prediction')
+        plt.plot(df['Date'], all_close_data, color='b', label='True')
+        plt.plot(test_set['Date'], run_avg_predictions, color='orange', label='Prediction')
+        ax = plt.gca()
+        ax.xaxis.set_major_locator(mdates.YearLocator())
+        plt.xticks(rotation=70)
         plt.xlabel('Date')
         plt.ylabel('Mid Price')
         plt.legend(fontsize=18)
