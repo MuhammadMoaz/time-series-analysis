@@ -76,7 +76,6 @@ def main():
         results_df = pd.DataFrame([results])
         results_df.to_csv("metrics.csv", mode='a+', header=not os.path.exists("metrics.csv"), index=False)
 
-
         plt.figure(figsize=(18, 9))
         plt.plot(dates, y, label="True")
         plt.plot(dates_test, y_pred, label="MARS Forecast", linestyle="--")

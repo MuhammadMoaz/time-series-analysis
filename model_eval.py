@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
 SECTOR_HASHMAP = {
     "WBC": "Financials", "CBA": "Financials", "NAB": "Financials",
@@ -18,5 +19,8 @@ def main():
 
     # Average perfromance by sector and model
     print(metrics.groupby(["Sector", "Model"])[["MAE", "RMSE", "MAPE", "R2"]].mean())
+
+    # Create folder for visualisations
+    os.makedirs("EvalOutput", exist_ok=True)
 
 main()
