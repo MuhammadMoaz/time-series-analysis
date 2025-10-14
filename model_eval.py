@@ -6,7 +6,7 @@ import os
 SECTOR_HASHMAP = {
     "WBC": "Financials", "CBA": "Financials", "NAB": "Financials",
     "CSL": "Materials", "BHP": "Materials", "RIO": "Materials",
-    "RMD": "Pharmaceuticlas", "PME": "Pharmaceuticlas", "AMC": "Pharmaceuticlas"
+    "RMD": "Pharma", "PME": "Pharma", "AMC": "Pharma"
 }
 
 def main():
