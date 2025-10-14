@@ -14,13 +14,20 @@ def main():
 
     metrics["Sector"] = metrics["Ticker"].map(SECTOR_HASHMAP)
 
-    # Average performance by model
-    print(metrics.groupby("Model")[["MAE", "RMSE", "MAPE", "R2"]].mean())
-
-    # Average perfromance by sector and model
-    print(metrics.groupby(["Sector", "Model"])[["MAE", "RMSE", "MAPE", "R2"]].mean())
-
     # Create folder for visualisations
     os.makedirs("EvalOutput", exist_ok=True)
+
+    # Init output text file
+    out_fn = 'model_eval.txt'
+
+    with open(out_fn, 'w+') as f:
+
+        # Average performance by model
+        f.write(str(metrics.groupby("Model")[["MAE", "RMSE", "MAPE", "R2"]].mean()))
+
+        f.write("\n\n")
+
+        # Average perfromance by sector and model
+        f.write(str(metrics.groupby(["Sector", "Model"])[["MAE", "RMSE", "MAPE", "R2"]].mean()))
 
 main()
