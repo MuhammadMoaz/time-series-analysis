@@ -138,13 +138,13 @@ def ARIMAForcast(df, ticker, p,d,q):
     # print(f"{ticker} | RMSE: {rmse:.3f}")
 
     results = {
-            "Ticker": ticker, 
-            "Model": "ARIMA", 
-            "MAE": mae, 
-            "RMSE": rmse, 
-            "MAPE": mape, 
-            "R2": r2
-        }
+        "Ticker": ticker, 
+        "Model": "ARIMA", 
+        "MAE": mae, 
+        "MAPE": mape, 
+        "RMSE": rmse, 
+        "R2": r2
+    }
 
     results_df = pd.DataFrame([results])
     results_df.to_csv("metrics.csv", mode='a+', header=not os.path.exists("metrics.csv"), index=False)
