@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
+import os
 
 def fetch_data(ticker_symbol):
     data = yf.download(ticker_symbol, end="2025-01-01", start="2001-01-01", multi_level_index=False)
@@ -9,8 +10,14 @@ def fetch_data(ticker_symbol):
     data['Differenced'] = data["Close"].diff()
     data.to_csv(f"datasets/{filename}")
 
-def create_metrics_csv():
-    pd.DataFrame(columns=["Ticker","Model","MAE","RMSE","MAPE","R2"]).to_csv("metrics.csv", index=False)
+def init_metrics_csv(filename):
+    if os.path.exists(filename):
+        with open(filename, 'r+') as f:
+            f.readline()
+            f.truncate(f.tell())
+    else:
+        pd.DataFrame(columns=["Ticker","Model","MAE","RMSE","MAPE","R2"]).to_csv(filename, index=False)
+
 
 def main():
     # Banks
@@ -28,6 +35,6 @@ def main():
     # fetch_data("RMD.AX")
     # fetch_data("PME.AX")
 
-    create_metrics_csv()
+    init_metrics_csv(filename="metrics.csv")
     
 main()
