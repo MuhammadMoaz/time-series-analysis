@@ -16,8 +16,7 @@ def init_metrics_csv(filename):
             f.readline()
             f.truncate(f.tell())
     else:
-        pd.DataFrame(columns=["Ticker","Model","MAE","RMSE","MAPE","R2"]).to_csv(filename, index=False)
-
+        pd.DataFrame(columns=["Ticker","Model","MAE","MAPE","RMSE","R2"]).to_csv(filename, index=False)
 
 def main():
     # Banks
