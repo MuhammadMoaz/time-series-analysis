@@ -24,7 +24,7 @@ def make_features(df, max_lag=5, roll_windows=(5, 10)):
     # Rolling averages of Close
     for w in roll_windows:
         out[f'Close_roll{w}'] = out['Close'].shift(1).rolling(w).mean()
-    # ✅ Keep Date and Close explicitly
+    # Keep Date and Close explicitly
     return out[['Date','Close'] + [c for c in out.columns if 'lag' in c or 'roll' in c]].dropna().copy()
 
 # -------------------
