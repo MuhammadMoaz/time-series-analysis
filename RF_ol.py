@@ -59,31 +59,15 @@ def walk_forward(data):
         yhat = rf_forecast(historical, testX)
         pred.append(yhat)
         historical.append(test_set[i])
-        # print(f"expected: {testy}, predicted: {yhat}")
         num += 1
-        print(f"num {num}")
+        print(f"num: {num}, expected: {testy}, predicted: {yhat}")
     #metrics
     return test_set[:,-1], pred
 
-
-def main():
-    datasets = Path("datasets").rglob("*.csv")
-    dataset_list = []
-    ticker_list = []
-
-    for data in datasets:
-        filename = str(data)
-        ticker = get_ticker(str(data))
-        create_output_folder(ticker)
-
-        dataset_list.append(filename)
-        ticker_list.append(ticker)
-
-        df = pd.read_csv(filename)
-
-        # model
-        series = pd.read_csv(dataset_list[0])["Close"]
-        # act_set = series.iloc[len(series)-0:] #2240
+def rf_model(data, ticker):
+        df = pd.read_csv(data)
+        series = df["Close"].copy()
+        # act_set = series.iloc[len(series)-10:]
         act_set = series
         data = series_transform(act_set, in_n=1, out_n=1)
         y, yhat = walk_forward(data)
@@ -94,8 +78,7 @@ def main():
         r2 = r2_score(y, yhat)
 
         print(f"{ticker} | MAE: {mae:.3f}, RMSE: {rmse:.3f}, MAPE: {mape*100:.2f}%, R2: {r2:.3f}")
-        # print(f"{ticker} | RMSE: {rmse:.3f}")
-
+ 
         results = {
             "Ticker": ticker, 
             "Model": "RF", 
@@ -107,11 +90,6 @@ def main():
 
         results_df = pd.DataFrame([results])
         results_df.to_csv("metrics.csv", mode='a+', header=not os.path.exists("metrics.csv"), index=False)
-
-        # plt.plot(y, label = "expected")
-        # plt.plot(yhat, label = "Predicted")
-        # plt.legend()
-        # plt.show()
 
         fig, (ax1) = plt.subplots(1,1, figsize=(20,10))
         ax1.plot(df["Date"], df["Close"], label="Actual")
@@ -125,8 +103,29 @@ def main():
         plt.tight_layout()
         plt.savefig(f"PDAOutput/PDA_{ticker}/{ticker}_RFFinal.png")
         plt.clf()
-        
 
+def main():
+    datasets = Path("datasets").rglob("*.csv")
+    dataset_list = []
+    ticker_list = []
 
+    for data in datasets:
+        filename = str(data)
+        ticker = get_ticker(str(data))
+        create_output_folder(ticker)
+
+        dataset_list.append(filename)
+        ticker_list.append(ticker)
+       
+    # rf_model(dataset_list[0], ticker_list[0])
+    rf_model(dataset_list[1], ticker_list[1])
+    rf_model(dataset_list[2], ticker_list[2])
+    rf_model(dataset_list[3], ticker_list[3])
+    rf_model(dataset_list[4], ticker_list[4])
+    rf_model(dataset_list[5], ticker_list[5])
+    rf_model(dataset_list[6], ticker_list[6])
+    rf_model(dataset_list[7], ticker_list[7])
+    rf_model(dataset_list[8], ticker_list[8])
+    
     
 main()
