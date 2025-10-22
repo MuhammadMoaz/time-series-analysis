@@ -98,6 +98,7 @@ def rf_model(data, ticker):
         ax1.xaxis.set_major_locator(mdates.YearLocator()) # xaxis ticks
         ax1.set_ylabel("Close Price")
         plt.xticks(rotation = 70)
+        plt.title(f"{ticker} Random Forest Forecast")
         plt.legend()
 
         plt.tight_layout()

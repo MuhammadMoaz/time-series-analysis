@@ -96,7 +96,7 @@ def main():
         test_set = df[train_size:]
 
         plt.figure(figsize=(18,9))
-        plt.title(f"{ticker} EMA Averaging Forecast")
+        plt.title(f"{ticker} LSTM Forecast")
         plt.plot(df['Date'], all_close_data, color='b', label='True')
         plt.plot(test_set['Date'], run_avg_predictions, color='orange', label='Prediction')
         ax = plt.gca()
