@@ -119,8 +119,8 @@ def main():
        
     # rf_model(dataset_list[0], ticker_list[0])
     # rf_model(dataset_list[1], ticker_list[1])
-    rf_model(dataset_list[2], ticker_list[2])
-    rf_model(dataset_list[3], ticker_list[3])
+    # rf_model(dataset_list[2], ticker_list[2])
+    # rf_model(dataset_list[3], ticker_list[3])
     rf_model(dataset_list[4], ticker_list[4])
     # rf_model(dataset_list[5], ticker_list[5])
     # rf_model(dataset_list[6], ticker_list[6])
