@@ -15,7 +15,13 @@ The models were benchmarked using four evaluation metrics:
 - R-Sqaured (Coefficient of Determination)  
 
 ## Usage Instructions
-The project deliverables, including the codebase, datasets, and visualisations, are available in the GitHub repository. The repository is structured into folders for datasets, EDA outputs, PDA outputs, and evaluation outputs, with model scripts and other python files stored in the root folder. The main script (main.py) is also stored in the root folder and handles the entire workflow. To run the pipeline, users must set up the environment (Python 3.9+ with all dependencies listed in requirements.txt) and execute the main script to perform the entire project process. New datasets can be added into the /datasets folder in CSV format by calling the fetch_data function with the respective ticker symbol as a parameter in the preprocessing.py file. Once a new dataset is added, rerunning the pipeline will automatically update the EDA, PDA, and performance evaluation sections.
+The project deliverables, including the codebase, datasets, and visualisations, are available in the GitHub repository. The repository is structured into folders for datasets, EDA outputs, PDA outputs, and evaluation outputs, with model scripts and other python files stored in the root folder. The main script (main.py) is also stored in the root folder. To run the pipeline, users must set up the environment (Python 3.9+ with all dependencies listed in requirements.txt) and execute the pipeline files in their respective order. The order of execution is as follows:
+- preprocessing.py, 
+- eda.py, 
+- the model files; arima.py, lstm.py, mars.py, and rf.py,
+- and model_eval.py
+
+New datasets can be added into the /datasets folder in CSV format by calling the fetch_data function with the respective ticker symbol as a parameter in the preprocessing.py file. Once a new dataset is added, rerunning the pipeline will automatically update the EDA, PDA, and performance evaluation sections.
 
 ## Ongoing Maintenance Tips
 In terms of ongoing maintenance, it is recommended to manage code through GitHub using appropriate version control practices such as push and pull requests. Performance should be monitored by reviewing the metrics and visualisation in the respective folders. If unusual results or visualisation occur, appropriate troubleshooting practices should be taken, starting from the preprocessing steps. 
